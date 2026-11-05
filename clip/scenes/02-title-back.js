@@ -5,7 +5,7 @@ scene({
     { type: 'bg', style: 'bokeh', drift: -12 },
     { type: 'sprite', char: 'vox', pose: 'back', x: W * .52, y: H + 330, anchor: 'bottom', shade: .6, rim: { color: '#c040ff', amount: .55, depth: .3 },
       keys: [{ t: 0, h: 1500 }, { t: b(32) - b(19), h: 1640, e: 'linear' }] },
-    { type: 'title', from: .4, text: 'CAN I SLEEP WITH YOU TONIGHT?', sub: '— live at the basement —', x: 90, y: H - 140, size: 52, type_cps: 26 },
+    { type: 'title', from: .4, text: 'CAN I SLEEP WITH YOU TONIGHT?', x: 90, y: H - 140, size: 52, type_cps: 26 },
   ],
   overlay: [{ type: 'note', text: '02 · со спины, титр (нужна поза со спины с гитарой)' }],
 });
