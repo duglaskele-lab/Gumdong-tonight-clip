@@ -1,0 +1,18 @@
+name: Render video
+on:
+  workflow_dispatch:
+    inputs:
+      fps: { description: 'Кадров в секунду', default: '24' }
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - run: sudo apt-get update && sudo apt-get install -y ffmpeg
+      - run: npm i --no-save playwright && npx playwright install --with-deps chromium
+      - run: node tools/render.js clip.mp4 ${{ inputs.fps }}
+      - uses: actions/upload-artifact@v4
+        with: { name: clip-mp4, path: clip.mp4 }

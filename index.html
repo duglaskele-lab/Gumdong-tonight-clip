@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="ru"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Gumdong Tonight</title>
+<style>
+@font-face{font-family:"Dela Gothic One";src:url(assets/fonts/dela-gothic-one-latin-400-normal.woff2) format("woff2");font-weight:400;font-display:block}
+@font-face{font-family:"VT323";src:url(assets/fonts/vt323-latin-400-normal.woff2) format("woff2");font-weight:400;font-display:block}
+@font-face{font-family:"Nunito";src:url(assets/fonts/nunito-latin-600-normal.woff2) format("woff2");font-weight:600;font-display:block}
+@font-face{font-family:"Nunito";src:url(assets/fonts/nunito-latin-800-normal.woff2) format("woff2");font-weight:800;font-display:block}
+@font-face{font-family:"Nunito";src:url(assets/fonts/nunito-latin-900-normal.woff2) format("woff2");font-weight:900;font-display:block}
+@font-face{font-family:"JetBrains Mono";src:url(assets/fonts/jetbrains-mono-latin-500-normal.woff2) format("woff2");font-weight:500;font-display:block}
+@font-face{font-family:"JetBrains Mono";src:url(assets/fonts/jetbrains-mono-latin-700-normal.woff2) format("woff2");font-weight:700;font-display:block}
+:root{color-scheme:dark;--bg:#07060a;--panel:#141018;--line:#2c2430;--txt:#ece6ee;--dim:#948a9a;--acc:#ff3a6e;--acc2:#7a2cff}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--txt);font:600 14px/1.3 Nunito,system-ui,sans-serif;overflow:hidden}
+#wrap{position:fixed;inset:0;display:flex;flex-direction:column}
+#stageBox{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;position:relative}
+canvas#c{max-width:100%;max-height:100%;aspect-ratio:16/9;background:#000;display:block}
+#bar{background:var(--panel);border-top:1px solid var(--line);padding:8px 12px calc(10px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:6px}
+body.hideui #bar,body.hideui #dbg{display:none}
+.row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+button{background:#211a26;color:var(--txt);border:1px solid var(--line);border-radius:8px;padding:6px 10px;font:800 13px Nunito,system-ui,sans-serif;cursor:pointer}
+button:hover{border-color:var(--acc)} button.on{background:var(--acc2);border-color:var(--acc2)}
+#play{background:var(--acc);color:#1a0008;border:none;min-width:70px}
+#time{font:700 14px "JetBrains Mono",monospace;min-width:150px}
+#scene{color:var(--dim);font-weight:800;flex:1;min-width:120px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#tl{width:100%;height:46px;display:block;cursor:pointer;border-radius:6px}
+#dbg{position:absolute;left:10px;bottom:10px;font:700 13px "JetBrains Mono",monospace;background:rgba(0,0,0,.6);padding:6px 9px;border-radius:6px;display:none;pointer-events:none}
+body.debug #dbg{display:block}
+#start{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(5,4,8,.5);cursor:pointer}
+#start div{background:var(--acc);color:#1a0008;font:900 26px Nunito,sans-serif;padding:18px 34px;border-radius:999px;box-shadow:0 10px 40px rgba(255,58,110,.4)}
+#sync{display:none;background:#1c1424;border:1px solid var(--acc2);border-radius:10px;padding:8px 10px;gap:10px;align-items:center}
+body.syncing #sync{display:flex} #sync b{color:var(--acc)}
+#exp{position:fixed;inset:10% 15%;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px;display:none;flex-direction:column;gap:8px;z-index:5}
+#exp.open{display:flex}
+#exp textarea{flex:1;background:#0b080d;color:var(--txt);border:1px solid var(--line);border-radius:8px;font:12px/1.4 "JetBrains Mono",monospace;padding:10px}
+.help{color:var(--dim);font-size:12px}
+@media (max-width:700px){#time{min-width:0}.help{display:none}#exp{inset:4%}}
+</style></head><body>
+<div id="wrap">
+  <div id="stageBox">
+    <canvas id="c" width="1920" height="1080"></canvas>
+    <div id="dbg"></div>
+    <div id="start"><div>▶ Play clip</div></div>
+  </div>
+  <div id="bar">
+    <canvas id="tl" height="46"></canvas>
+    <div class="row">
+      <button id="play">▶ Play</button>
+      <span id="time">00:00.00 / 00:00</span>
+      <span id="scene"></span>
+      <button id="bNotes" class="on" title="Метки прототипа (N)">Notes</button>
+      <button id="bSync" title="Подгонка строк текста (L)">Sync lyrics</button>
+      <button id="bCopy" title="Скопировать ссылку на текущий кадр (C)">Copy link</button>
+      <button id="bDbg" title="Инфо о сцене (D)">Info</button>
+      <button id="bHide" title="Спрятать панель (H)">Hide UI</button>
+      <button id="bFull" title="Во весь экран (F)">⛶</button>
+    </div>
+    <div id="sync" class="row">
+      <span>Строка <b id="sIdx"></b>: <span id="sTxt"></span></span>
+      <span class="help">Enter = строка началась сейчас · Backspace = шаг назад</span>
+      <button id="sExport">Export timings</button>
+    </div>
+    <div class="row help">Space play/pause · ←/→ 2 с · Shift+←/→ 1 кадр · [ ] сцены · N метки · D инфо · H панель · L текст · ?t=0:41 — открыть на кадре</div>
+  </div>
+</div>
+<div id="exp"><b>Вставьте это в clip/config.js → LYRICS (или пришлите в чат):</b><textarea id="expTxt" readonly></textarea><div class="row"><button id="expCopy">Copy</button><button id="expClose">Close</button></div></div>
+<audio id="aud" preload="auto"></audio>
+
+<script src="engine/core.js" charset="utf-8"></script>
+<script src="engine/world.js" charset="utf-8"></script>
+<script src="engine/layers.js" charset="utf-8"></script>
+<script src="assets/data/vox_env.js" charset="utf-8"></script>
+<script src="clip/config.js" charset="utf-8"></script>
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  const cv = $('c'), ctx = cv.getContext('2d'); E.ctx = ctx;
+  const aud = $('aud'); aud.src = (window.__A && __A[CLIP.audio]) || CLIP.audio;
+  const q = new URLSearchParams(location.search);
+  let T = 0, playing = false, clock0 = 0, audioOK = true;
+  aud.addEventListener('error', () => { audioOK = false; });
+  const fmt = t => { t = Math.max(0, t); const m = Math.floor(t / 60), s = t - m * 60; return String(m).padStart(2, '0') + ':' + s.toFixed(2).padStart(5, '0'); };
+  const parseT = s => { if (!s) return 0; if (s.includes(':')) { const [m, x] = s.split(':'); return +m * 60 + +x; } return +s; };
+
+  function now() { if (!playing) return T; if (audioOK && !aud.paused) return aud.currentTime; return (performance.now() - clock0) / 1000; }
+  function seek(t) { T = clamp(t, 0, CLIP.duration - .01); if (audioOK) { try { aud.currentTime = T; } catch (e) {} } clock0 = performance.now() - T * 1000; }
+  function play() { if (playing) return; playing = true; $('start').style.display = 'none'; $('play').textContent = '❚❚ Pause';
+    clock0 = performance.now() - T * 1000; if (audioOK) { aud.currentTime = T; aud.play().catch(() => { audioOK = false; clock0 = performance.now() - T * 1000; }); } }
+  function pause() { T = now(); playing = false; aud.pause(); $('play').textContent = '▶ Play'; }
+  const toggle = () => playing ? pause() : play();
+
+  // ---------- таймлайн ----------
+  const tl = $('tl'), tg = tl.getContext('2d'); const hues = ['#7a2cff', '#e83a6e', '#f0a921', '#2d3a8c', '#d71607', '#1f9c5b'];
+  function drawTL() {
+    const w = tl.clientWidth, h = 46, dpr = devicePixelRatio || 1; if (tl.width !== w * dpr) { tl.width = w * dpr; tl.height = h * dpr; }
+    tg.setTransform(dpr, 0, 0, dpr, 0, 0); tg.clearRect(0, 0, w, h); const X = t => t / CLIP.duration * w;
+    SCENES.forEach((s, i) => { tg.fillStyle = hues[i % hues.length]; tg.globalAlpha = .55; tg.fillRect(X(s.start), 0, X(s.end) - X(s.start) - 1, 28);
+      tg.globalAlpha = 1; tg.fillStyle = '#fff'; tg.font = '700 10px Nunito,sans-serif'; if (X(s.end) - X(s.start) > 18) tg.fillText(s.id.split(' ')[0], X(s.start) + 3, 12); });
+    tg.fillStyle = '#ffd23a'; LYRICS.forEach(l => tg.fillRect(X(l.t), 30, 2, 14));
+    tg.fillStyle = '#ffffff'; tg.fillRect(X(now()) - 1, 0, 3, h);
+  }
+  let drag = false; const tlSeek = e => { const r = tl.getBoundingClientRect(); seek((e.clientX - r.left) / r.width * CLIP.duration); };
+  tl.addEventListener('pointerdown', e => { drag = true; tl.setPointerCapture(e.pointerId); const was = playing; if (was) pause(); tlSeek(e); tl._resume = was; });
+  tl.addEventListener('pointermove', e => { if (drag) tlSeek(e); });
+  tl.addEventListener('pointerup', () => { drag = false; if (tl._resume) play(); });
+
+  // ---------- подгонка текста ----------
+  let syncIdx = 0;
+  function syncUI() { const l = LYRICS[syncIdx]; $('sIdx').textContent = l ? `#${syncIdx + 1}/${LYRICS.length}` : 'готово'; $('sTxt').textContent = l ? l.text : 'Все строки расставлены — Export!'; }
+  function toggleSync() { document.body.classList.toggle('syncing'); $('bSync').classList.toggle('on');
+    if (document.body.classList.contains('syncing')) { const t = now(); syncIdx = LYRICS.findIndex(l => l.t > t - .3); if (syncIdx < 0) syncIdx = 0; syncUI(); } }
+  function syncMark() { const l = LYRICS[syncIdx]; if (!l) return; const t = +now().toFixed(2); const d = t - l.t; l.t = t; if (l.end) l.end = +(l.end + d).toFixed(2); syncIdx++; syncUI(); }
+  function syncBack() { syncIdx = Math.max(0, syncIdx - 1); syncUI(); const l = LYRICS[syncIdx]; pause(); seek(l.t - 2); play(); }
+  function exportTimings() { $('expTxt').value = 'const LYRICS = [\n' + LYRICS.map(l => `  { t: ${l.t.toFixed(2)}${l.end ? `, end: ${l.end.toFixed(2)}` : ''}, text: ${JSON.stringify(l.text)} },`).join('\n') + '\n];'; $('exp').classList.add('open'); }
+
+  // ---------- кнопки и клавиши ----------
+  $('start').onclick = play; $('play').onclick = toggle;
+  $('bSync').onclick = toggleSync; $('sExport').onclick = exportTimings;
+  $('expClose').onclick = () => $('exp').classList.remove('open');
+  $('expCopy').onclick = () => { $('expTxt').select(); navigator.clipboard?.writeText($('expTxt').value).catch(() => document.execCommand('copy')); };
+  $('bCopy').onclick = () => { const t = now(), m = Math.floor(t / 60), s = (t - m * 60).toFixed(1); const url = location.origin + location.pathname + '?t=' + m + ':' + s.padStart(4, '0');
+    navigator.clipboard?.writeText(url).catch(() => {}); $('bCopy').textContent = 'Скопировано ' + fmt(t); setTimeout(() => $('bCopy').textContent = 'Copy link', 1500); };
+  $('bNotes').onclick = () => { E.notes = !E.notes; $('bNotes').classList.toggle('on', E.notes); if (!playing) renderAt(T, ctx); };
+  $('bDbg').onclick = () => { document.body.classList.toggle('debug'); $('bDbg').classList.toggle('on'); };
+  $('bHide').onclick = () => document.body.classList.toggle('hideui');
+  $('bFull').onclick = () => { document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen?.(); };
+  const sceneIdx = () => { const t = now(); const i = SCENES.findIndex(s => t >= s.start && t < s.end); return i < 0 ? 0 : i; };
+  addEventListener('keydown', e => {
+    if (e.target.tagName === 'TEXTAREA') return; const k = e.key;
+    if (k === ' ') { e.preventDefault(); toggle(); }
+    else if (k === 'ArrowRight') seek(now() + (e.shiftKey ? 1 / 24 : 2));
+    else if (k === 'ArrowLeft') seek(now() - (e.shiftKey ? 1 / 24 : 2));
+    else if (k === ']') seek(SCENES[Math.min(SCENES.length - 1, sceneIdx() + 1)].start);
+    else if (k === '[') seek(SCENES[Math.max(0, sceneIdx() - 1)].start);
+    else if (k === 'Home') seek(0);
+    else if (/^[dD]$/.test(k)) $('bDbg').click(); else if (/^[hH]$/.test(k)) $('bHide').click();
+    else if (/^[fF]$/.test(k)) $('bFull').click(); else if (/^[cC]$/.test(k)) $('bCopy').click();
+    else if (/^[nN]$/.test(k)) $('bNotes').click(); else if (/^[lL]$/.test(k)) toggleSync();
+    else if (document.body.classList.contains('syncing') && k === 'Enter') { e.preventDefault(); syncMark(); }
+    else if (document.body.classList.contains('syncing') && k === 'Backspace') { e.preventDefault(); syncBack(); }
+  });
+
+  // ---------- цикл ----------
+  function frame() {
+    let t = now(); if (t >= CLIP.duration) { pause(); seek(0); t = 0; }
+    if (!playing) t = T;
+    renderAt(t, ctx);
+    $('time').textContent = fmt(t) + ' / ' + fmt(CLIP.duration).slice(0, 5);
+    const S = sceneAt(t); $('scene').textContent = S ? S.id : '';
+    if (document.body.classList.contains('debug')) { const L = lyricAt(t); $('dbg').innerHTML = `${fmt(t)} · доля ${beatIdx(t)}<br>сцена ${S ? S.id : '-'} · ${S ? (t - S.start).toFixed(2) : '-'} с от начала<br>строка ${L ? '#' + (L.i + 1) : '-'}`; }
+    drawTL(); requestAnimationFrame(frame);
+  }
+  loadAll().then(() => {
+    if (q.has('notes') && q.get('notes') === '0') { E.notes = false; $('bNotes').classList.remove('on'); }
+    if (q.has('render')) { E.notes = false; T = parseT(q.get('t')); $('start').style.display = 'none'; document.body.classList.add('hideui'); renderAt(T, ctx); window.__ready = true; return; }
+    if (q.has('t')) { seek(parseT(q.get('t'))); $('start').querySelector('div').textContent = '▶ Play from ' + fmt(T); }
+    renderAt(T, ctx); window.__ready = true; requestAnimationFrame(frame);
+  });
+  window.__seek = seek;
+})();
+</script>
+</body></html>
