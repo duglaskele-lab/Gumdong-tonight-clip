@@ -23,9 +23,9 @@
 
 **Gumdong (вокал, гитара, левша)** — подробный план ниже, в разделе «План спрайтов: Gumdong».
 
-**Rossali (бас)** — база: `src-sheets/rossali_bass_src.png` ✅ поза с басом есть. Seedance: цикл игры от этой картинки.
+**Rossali (бас)** — подробный план ниже, в разделе «План спрайтов: Rossali и Lupa».
 
-**Lupa (ударные)** — сидя за установкой (или по пояс, установку дорисует движок); Seedance: цикл игры.
+**Lupa (ударные)** — подробный план ниже, в разделе «План спрайтов: Rossali и Lupa».
 
 **Зрители** — каждый уникальный, сидя (по пояс достаточно — столик закрывает низ); Alex — танец у сцены (Seedance, цикл 2–4 с).
 
@@ -111,3 +111,33 @@
 **S4** — *She glances nervously to the side, ears flatten. Static camera.*
 
 Советы для Seedance: **перед загрузкой дополнить первый кадр белыми полями до формата видео (3:4 или 9:16)** — иначе Seedance обрезает края картинки (так в S3 обрезался гриф); просить *plain white background, no lighting effects* — в S3 он сам добавил серый фон с лучами (вырезали нейросетью, но с белым чище). если лицо «плывёт» — короче ролик (3–4 с) и меньше движения головы; если гитара перевернулась в правую руку — перегенерировать, отзеркалить нельзя. Водяной знак в углу не мешает — вырезается.
+
+## План спрайтов: Rossali и Lupa
+
+Они не поют — липсинк не нужен. Главное — **живая игра на общих планах** (сцены 01, 05, 09, 10, фон 08 и 11) и **по два портрета** для склеек на «again» (сцена 07).
+
+Где они сейчас: Rossali — статичный спрайт с басом, покачивается кодом; Lupa — картинка с листа (290×571, без палочек), барабанная установка нарисована кодом, «хедбэнг» кодом. В сцене 07 — кропы этих же картинок (мелкие, у Lupa 235 px).
+
+### Rossali (бас, играет правой рукой — гриф справа на картинке, как в `rossali_bass_src.png`)
+
+| # | Что | Где | Инструмент | Промпт (после общей фразы) | Статус |
+|---|---|---|---|---|---|
+| R1 | В полный рост с басом | общие планы | ChatGPT | — | ✅ `rossali_bass` |
+| R2 | **Цикл игры на басе** | 01, 05, 09, 10 | Seedance, кадр — `rossali_bass_src.png` + поля до 3:4 | *She plays a steady groove on her black 4-string bass, plucking with her right fingers, left hand moving on the neck, head nodding slightly to the beat, hair and big tail sway gently. Feet stay in place. Static camera, plain white background, no lighting effects. End in exactly the same pose as the first frame.* | ⬜ приоритет 1 |
+| R3 | Портрет по грудь, спокойная/хищная полуулыбка | 07 (2 «again») | ChatGPT, лист + `rossali_bass_src.png` | *Close-up portrait from chest up, facing camera slightly turned, calm half-smile, red eyes looking at the viewer, cigarette in the corner of her mouth, bass strap over the shoulder. High resolution.* | ⬜ |
+| R4 | Энергичная игра: хлёст волосами / наклон с басом (по желанию) | 09 — нарастание к припеву | Seedance | *She leans back and plays a hard, fast bass line, throws her long hair back with a head swing, tail swishes. Feet stay in place. Static camera, plain white background. End in the same pose as the first frame.* | ⬜ |
+
+### Lupa (ударные)
+
+Для анимации игры **установка должна быть на картинке** (палочки должны попадать по барабанам) — тогда установка кодом в клубе прячется.
+
+| # | Что | Где | Инструмент | Промпт (после общей фразы) | Статус |
+|---|---|---|---|---|---|
+| L1 | **Сидит за барабанной установкой**, палочки в руках, вид спереди чуть сбоку | общие планы | ChatGPT, лист `lupa_sheet.png` | *Lupa sits behind a full black drum kit (bass drum facing the viewer, snare, two toms, hi-hat and two cymbals), holding drumsticks raised, ready to hit, wide toothy grin. Front view, slightly from the side, whole drum kit and her upper body visible, plain white background, margins around, no text.* | ⬜ приоритет 1 |
+| L2 | **Цикл игры на барабанах** | 01, 05, 09, 10, фон 08 и 11 | Seedance, кадр — L1 + поля до 3:4 | *She plays a steady energetic rock beat on the drums, sticks hitting the snare and hi-hat in rhythm, headbanging to every beat, hair bouncing. The drum kit stays still. Static camera, plain white background, no lighting effects. End in exactly the same pose as the first frame.* | ⬜ приоритет 1 |
+| L3 | Портрет по грудь, широкая ухмылка с клыками | 07 (2 «again») | ChatGPT, лист | *Close-up portrait from chest up, facing camera, wide toothy grin with sharp canines, one eye hidden by purple hair, gold earrings visible. High resolution.* | ⬜ |
+| L4 | Брейк + удар по тарелке (по желанию) | конец 09 → вспышка начала 10 | Seedance, кадр — L1 | *She plays a fast drum fill across the toms and ends with a big crash cymbal hit, both arms up, head thrown back. The drum kit stays still. Static camera, plain white background.* | ⬜ |
+
+Общая фраза для ChatGPT (как у Gumdong): *Same character as the reference, same art style, same outfit. Plain white background, full figure with margins, no text.*
+
+**Порядок:** L1 → L2 → R2 → портреты R3, L3 → по желанию R4, L4.
