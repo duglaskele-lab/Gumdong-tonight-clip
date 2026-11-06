@@ -1,0 +1,13 @@
+# GitHub Pages: публикуем только то, что нужно плееру (иначе публикация не успевает за 10 минут и падает).
+# Файлы остаются в репозитории — их просто нет на сайте.
+# Если начнём использовать исключённую анимацию (например gumdong_sing1) — убрать её из списка.
+exclude:
+  - src-sheets
+  - tools
+  - docs
+  - README.md
+  - CLAUDE.md
+  - assets/audio/song.mp3
+  - assets/sprites/*.png
+  - assets/anim/gumdong_sing1
+  - .github
