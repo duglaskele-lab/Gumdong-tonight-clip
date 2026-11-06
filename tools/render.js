@@ -11,11 +11,12 @@ const MIME = { '.html': 'text/html', '.js': 'text/javascript', '.png': 'image/pn
   const b = await chromium.launch(); const p = await b.newPage({ viewport: { width: 1920, height: 1200 } });
   p.on('pageerror', e => console.log('PAGEERROR', e.message));
   await p.goto(`http://localhost:${port}/index.html?render&t=0`); await p.waitForFunction('window.__ready === true', null, { timeout: 120000 });
-  const clip = await p.evaluate(() => ({ duration: CLIP.duration, audio: CLIP.audio, fadeOut: CLIP.fadeOut }));
+  const clip = await p.evaluate(() => ({ duration: CLIP.duration, audio: CLIP.audio, fadeOut: CLIP.fadeOut, audioFade: CLIP.audioFade }));
+  const af = clip.audioFade || [clip.fadeOut, clip.duration];   // затухание звука (квадратичное, как в плеере)
   const t0 = fromArg ? +fromArg : 0, t1 = toArg ? +toArg : clip.duration, n = Math.round((t1 - t0) * fps);
   const ff = spawn('ffmpeg', ['-y', '-v', 'error', '-f', 'image2pipe', '-framerate', String(fps), '-c:v', 'mjpeg', '-i', '-',
     '-ss', String(t0), '-t', String(t1 - t0), '-i', path.join(ROOT, clip.audio),
-    '-af', `afade=t=out:st=${Math.max(0, clip.fadeOut - t0)}:d=${clip.duration - clip.fadeOut}`,
+    '-af', `afade=t=out:st=${Math.max(0, af[0] - t0)}:d=${af[1] - af[0]}:curve=qua`,
     '-c:v', 'libx264', '-preset', 'veryfast', '-crf', '18', '-pix_fmt', 'yuv420p', '-c:a', 'aac', '-b:a', '192k', '-shortest', out], { stdio: ['pipe', 'inherit', 'inherit'] });
   for (let i = 0; i < n; i += 12) {
     const ts = []; for (let k = i; k < Math.min(n, i + 12); k++) ts.push(t0 + k / fps);

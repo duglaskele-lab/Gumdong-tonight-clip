@@ -8,11 +8,11 @@ const shots = [
   { char: 'lupa', pose: 'face', h: 900, x: W * .7 },
   { char: 'maeve', pose: 'front', crop: [0, 0, 1, .36], h: 1000, x: W * .32 },
   { char: 'alex', pose: 'front', crop: [0, 0, 1, .34], h: 1000, x: W * .68 },
-  { char: 'gumdong', pose: 'eyes', anchor: 'center', h: W * 505 / 1280, x: W / 2, y: H / 2, bg: '#000' },   // глаза крупно, чёрные поля сверху/снизу
+  { char: 'gumdong', pose: 'scared', h: 1040, x: W * .5, mouth: true },   // поёт «again» — в середине сцены
   { char: 'rossali', pose: 'bass', crop: [0, 0, 1, .42], h: 1000, x: W * .64 },
   { char: 'lupa', pose: 'face', h: 900, x: W * .3, flip: true },
   { char: 'maeve', pose: 'front', crop: [0, 0, 1, .36], h: 1000, x: W * .68, flip: true },
-  { char: 'gumdong', pose: 'scared', h: 1040, x: W * .5, mouth: true },
+  { char: 'gumdong', pose: 'eyes', anchor: 'center', h: W * 505 / 1280, x: W / 2, y: H / 2, bg: '#000' },   // финал сцены: глаза крупно, чёрные поля
 ];
 const BGS = ['#8a0014', '#1d1a22'];
 scene({

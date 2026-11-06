@@ -45,6 +45,8 @@ function splineAt(keys, t, ease = .65) {
   }
   return o;
 }
+// громкость песни 0..1: быстрое затухание (квадратичное) на отрезке CLIP.audioFade
+function audioGain(t) { const f = CLIP.audioFade; if (!f) return 1; const u = clamp((t - f[0]) / (f[1] - f[0]), 0, 1); return (1 - u) * (1 - u); }
 const BEAT = () => 60 / CLIP.bpm;
 const beatPos = t => (t - CLIP.beatOffset) / BEAT();
 const beatIdx = t => Math.floor(beatPos(t));
