@@ -3,6 +3,7 @@
 'use strict';
 const CLIP = {
   title: 'Can I Sleep with You Tonight?',
+  ver: 4,   // поднимать, когда картинку заменили под тем же именем (сбрасывает кеш браузера)
   audio: 'assets/audio/song.mp3',
   bpm: 143.555, beatOffset: 0.186,          // доля ≈ 0.418 с
   duration: 67.5, fadeOut: 66.0,
@@ -30,6 +31,9 @@ const b = k => CLIP.beatOffset + k * 60 / CLIP.bpm;   // время доли №
 const ANIM_FILES = {
   gumdong_play1: { dir: 'assets/anim/gumdong_play1', frames: 119, fps: 24, loop: true },
   gumdong_sing1: { dir: 'assets/anim/gumdong_sing1', frames: 119, fps: 24, loop: true },
+  // gumdong_mic_up — у микрофона поднимает голову к свету (S3), 121 кадр, без цикла (держит последний кадр);
+  // кадры в той же рамке, что спрайт gumdong_mic → переход со статики незаметен
+  gumdong_mic_up: { dir: 'assets/anim/gumdong_mic_up', frames: 121, fps: 24, loop: false },
 };
 
 const ASSETS = {
@@ -65,7 +69,8 @@ const CHARACTERS = {
       mouths: ['gumdong_34_closed', 'gumdong_34_half', 'gumdong_34_wide', 'gumdong_34_o'] },
     play: { key: 'gumdong_guitar', anim: 'gumdong_play1' },   // анимация: играет на гитаре (Seedance S1, цикл 5 с)
     sing: { key: 'gumdong_sing_up', anim: 'gumdong_sing1' },  // анимация: поёт и играет, голова вверх (S2)
-    mic: { key: 'gumdong_mic', part: .6 },  // по пояс у микрофона с гитарой, поёт (рот открыт); part — доля роста сверху
+    mic: { key: 'gumdong_mic', part: .6 },
+    micUp: { key: 'gumdong_mic', part: .6, anim: 'gumdong_mic_up' },  // анимация S3: у микрофона поднимает голову к свету  // по пояс у микрофона с гитарой, поёт (рот открыт); part — доля роста сверху
     singUp: 'gumdong_sing_up',          // в полный рост, голова вверх, глаза закрыты, поёт
     backGuitar: 'gumdong_back_guitar',  // со спины с гитарой (отзеркалена: гриф в правой руке — она левша)
     eyes: 'gumdong_eyes',               // глаза крупно — прямоугольный кадр, не вырезан

@@ -66,8 +66,8 @@ function poseImg(P, T, o = {}) {
 }
 
 // ---------- loading ----------
-const loadScript = src => new Promise((ok, no) => { const s = document.createElement('script'); s.src = src; s.charset = 'utf-8'; s.onload = ok; s.onerror = () => no(src); document.head.appendChild(s); });
-const loadImg = src => new Promise(ok => { const im = new Image(); im.onload = () => ok(im); im.onerror = () => { console.warn('missing', src); ok(null); }; im.src = (window.__A && __A[src]) || src; });
+const loadScript = src => new Promise((ok, no) => { const s = document.createElement('script'); s.src = src + (window.__V ? '?v=' + window.__V : ''); s.charset = 'utf-8'; s.onload = ok; s.onerror = () => no(src); document.head.appendChild(s); });
+const loadImg = src => new Promise(ok => { const im = new Image(); im.onload = () => ok(im); im.onerror = () => { console.warn('missing', src); ok(null); }; im.src = (window.__A && __A[src]) || (src + (typeof CLIP !== 'undefined' && CLIP.ver ? '?v=' + CLIP.ver : '')); });
 async function loadAll() {
   for (const n of CLIP.scenes) { try { await loadScript('clip/scenes/' + n + '.js'); } catch (e) { console.error('scene file failed', e); } }
   SCENES.sort((a, b) => a.start - b.start);
@@ -152,10 +152,12 @@ function renderAt(T, outCtx) {
     const lt = T - S.start;
     // тряска/удар камеры
     ctx.save();
-    if (S.punch || S.shake) {
-      const p = beatPhase(T), k = S.punch ? 1 + S.punch * Math.pow(1 - p, 3) : 1;
+    // bob — плавное покачивание кадра вверх-вниз в такт (px): вниз на одну долю, вверх на следующую.
+    // Кадр чуть увеличен, чтобы при сдвиге не открывались края. (Бывший «удар» punch убран по просьбе.)
+    if (S.bob || S.shake) {
+      const bob = S.bob || 0, dy = bob * Math.cos(Math.PI * beatPos(T)), k = 1 + 2 * bob / H;
       const sh = typeof S.shake === 'function' ? S.shake(lt, T) : (S.shake || 0);
-      ctx.translate(W / 2 + (rand(Math.floor(T * 24)) - .5) * sh, H / 2 + (rand(Math.floor(T * 24) + 99) - .5) * sh); ctx.scale(k, k); ctx.translate(-W / 2, -H / 2);
+      ctx.translate(W / 2 + (rand(Math.floor(T * 24)) - .5) * sh, H / 2 + dy + (rand(Math.floor(T * 24) + 99) - .5) * sh); ctx.scale(k, k); ctx.translate(-W / 2, -H / 2);
     }
     if (S.world) drawWorld(ctx, S, lt, T);
     for (const L of S.layers || []) drawLayer(ctx, L, S, lt, T);

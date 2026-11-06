@@ -2,7 +2,7 @@
 { // блок: константы сцены не видны другим файлам
 const D9 = () => b(144) - b(127);
 scene({
-  id: '09 instrumental', start: b(127), end: b(144), world: true, lyrics: 'none', punch: .03,
+  id: '09 instrumental', start: b(127), end: b(144), world: true, lyrics: 'none', bob: 8,
   cam: { keys: [
     { t: 0, x: -3.6, y: 1.5, z: 8.4, yaw: 17, pitch: 3, roll: -3 },
     { t: 3.55, x: 0, y: 1.25, z: 9.6, yaw: 0, pitch: 6, roll: 2 },

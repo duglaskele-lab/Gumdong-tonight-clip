@@ -2,7 +2,7 @@
 { // блок: константы сцены не видны другим файлам
 const OFF10 = 65.8 - b(144);   // от начала сцены: блэкаут
 scene({
-  id: '10 chorus tonight', start: b(144), end: CLIP.duration, world: true, lyrics: 'caption', punch: .045,
+  id: '10 chorus tonight', start: b(144), end: CLIP.duration, world: true, lyrics: 'caption', bob: 12,
   cam: { keys: [
     { t: 0, x: 0, y: 1.6, z: 7.4, pitch: 4 },
     { t: OFF10, x: 0, y: 1.7, z: 9.7, pitch: 5, e: 'linear' },

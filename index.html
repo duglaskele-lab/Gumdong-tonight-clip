@@ -67,11 +67,11 @@ body.syncing #sync{display:flex} #sync b{color:var(--acc)}
 <div id="exp"><b>Вставьте это в clip/config.js → LYRICS (или пришлите в чат):</b><textarea id="expTxt" readonly></textarea><div class="row"><button id="expCopy">Copy</button><button id="expClose">Close</button></div></div>
 <audio id="aud" preload="auto"></audio>
 
-<script src="engine/core.js" charset="utf-8"></script>
-<script src="engine/world.js" charset="utf-8"></script>
-<script src="engine/layers.js" charset="utf-8"></script>
-<script src="assets/data/vox_env.js" charset="utf-8"></script>
-<script src="clip/config.js" charset="utf-8"></script>
+<script>/* скрипты всегда свежие: GitHub Pages кеширует файлы на 10 минут */
+window.__V = Date.now();
+for (const s of ['engine/core.js', 'engine/world.js', 'engine/layers.js', 'assets/data/vox_env.js', 'clip/config.js'])
+  document.write('<script src="' + s + '?v=' + __V + '" charset="utf-8"><\/script>');
+</script>
 <script>
 (() => {
   const $ = id => document.getElementById(id);
