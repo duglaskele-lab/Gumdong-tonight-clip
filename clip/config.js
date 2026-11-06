@@ -24,10 +24,19 @@ const CLIP = {
 };
 const b = k => CLIP.beatOffset + k * 60 / CLIP.bpm;   // время доли № k
 
+// Анимации (кадры Seedance, вырезаны tools/whitecut.py): assets/anim/<имя>/fNNN.webp
+// gumdong_play1 — спокойная игра на гитаре, 119 кадров, 24 fps, цикл (движок пока анимации не проигрывает)
+const ANIM_FILES = { gumdong_play1: { dir: 'assets/anim/gumdong_play1', frames: 119, fps: 24, loop: true } };
+
 const ASSETS = {
   gumdong_guitar: 'assets/sprites/gumdong_guitar.png',
   gumdong_front: 'assets/sprites/gumdong_front.png', gumdong_side: 'assets/sprites/gumdong_side.png', gumdong_back: 'assets/sprites/gumdong_back.png',
   gumdong_face: 'assets/sprites/gumdong_face.png', gumdong_face34: 'assets/sprites/gumdong_face34.png',
+  // портреты высокого разрешения с 4 ртами (закрыт / приоткрыт / А / О); картинки совпадают везде, кроме рта
+  gumdong_scared_closed: 'assets/sprites/gumdong_scared_closed.png', gumdong_scared_half: 'assets/sprites/gumdong_scared_half.png',
+  gumdong_scared_wide: 'assets/sprites/gumdong_scared_wide.png', gumdong_scared_o: 'assets/sprites/gumdong_scared_o.png',
+  gumdong_34_closed: 'assets/sprites/gumdong_34_closed.png', gumdong_34_half: 'assets/sprites/gumdong_34_half.png',
+  gumdong_34_wide: 'assets/sprites/gumdong_34_wide.png', gumdong_34_o: 'assets/sprites/gumdong_34_o.png',
   rossali_bass: 'assets/sprites/rossali_bass.png', rossali_front: 'assets/sprites/rossali_front.png', rossali_side: 'assets/sprites/rossali_side.png',
   lupa_front: 'assets/sprites/lupa_front.png', lupa_34: 'assets/sprites/lupa_34.png', lupa_face: 'assets/sprites/lupa_face.png',
   maeve_front: 'assets/sprites/maeve_front.png', alex_front: 'assets/sprites/alex_front.png',
@@ -43,6 +52,11 @@ const CHARACTERS = {
     side: 'gumdong_side', back: 'gumdong_back',
     face: { key: 'gumdong_face', mouth: { x: .548, y: .724, w: .095 } },
     face34: { key: 'gumdong_face34', mouth: { x: .182, y: .773, w: .1 } },
+    // новые портреты: mouths — нарисованные рты для липсинка (движок пока их не переключает — следующий шаг)
+    scared: { key: 'gumdong_scared_closed', mouth: { x: .499, y: .446, w: .106 },
+      mouths: ['gumdong_scared_closed', 'gumdong_scared_half', 'gumdong_scared_wide', 'gumdong_scared_o'] },
+    q34: { key: 'gumdong_34_half', mouth: { x: .364, y: .46, w: .08 },
+      mouths: ['gumdong_34_closed', 'gumdong_34_half', 'gumdong_34_wide', 'gumdong_34_o'] },
   } },
   rossali: { name: 'Rossali — бас', height: 1.74, fallback: 'bass', poses: { bass: 'rossali_bass', front: { key: 'rossali_front', inst: { x: .5, y: .56 } }, side: 'rossali_side' } },
   lupa: { name: 'Lupa — ударные', height: 1.6, fallback: 'front', poses: { front: 'lupa_front', q34: 'lupa_34', face: 'lupa_face' } },

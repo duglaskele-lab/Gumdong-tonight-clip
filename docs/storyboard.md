@@ -21,7 +21,7 @@
 
 ## Список ассетов к генерации
 
-**Gumdong (вокал, гитара, левша)** — база для генерации: `src-sheets/gumdong_guitar_src.png` ✅ поза с гитарой есть. Ещё нужно: портрет анфас и 3/4 (плечи + ошейник, белый фон, с полями); к каждому 4 рта: закрыт / приоткрыт / «А» / «О» (лучше той же картинкой с разными ртами); у микрофона с гитарой (поёт); со спины с гитарой. Seedance: покачивание у микрофона 2–3 с, цикл.
+**Gumdong (вокал, гитара, левша)** — подробный план ниже, в разделе «План спрайтов: Gumdong».
 
 **Rossali (бас)** — база: `src-sheets/rossali_bass_src.png` ✅ поза с басом есть. Seedance: цикл игры от этой картинки.
 
@@ -30,3 +30,65 @@
 **Зрители** — каждый уникальный, сидя (по пояс достаточно — столик закрывает низ); Alex — танец у сцены (Seedance, цикл 2–4 с).
 
 **Генерация:** белый или светло-серый ровный фон, персонаж целиком с полями вокруг, без подписей и стрелок рядом с фигурой.
+
+## План спрайтов: Gumdong
+
+**Gumdong — левша:** гриф в **правой** руке (на картинке слева), бьёт по струнам **левой**. ChatGPT и Seedance любят «исправлять» это — сверять с референсом; готовые спрайты не отзеркаливать.
+
+### Что есть
+
+| Спрайт | Файл | Размер | Состояние |
+|---|---|---|---|
+| В полный рост с гитарой | `gumdong_guitar.png` | 956×2000 | ✅ основа для всех новых поз и роликов |
+| Портрет анфас, испуганный, 4 рта | `gumdong_scared_{closed,half,wide,o}.png` | 957×1270 | ✅ рты выровнены — отличается только рот |
+| Портрет 3/4, 4 рта | `gumdong_34_{closed,half,wide,o}.png` | 812×1323 | ✅ рты выровнены (база — «half», остальные рты перенесены на неё) |
+| Цикл игры на гитаре (S1) | `assets/anim/gumdong_play1/f000–f118.webp` | 535×1050, 24 fps, 119 кадров | ✅ цикл ≈ 4.96 с, последний кадр ≈ первому |
+| Анфас / профиль / спина с листа | `gumdong_front/side/back.png` | ~270×870 | ⚠️ мелкие, без гитары — заменить |
+| Старые портреты с листа | `gumdong_face.png`, `gumdong_face34.png` | ~300×400 | ⚠️ мелкие — заменяются новыми |
+
+Исходники: `src-sheets/gumdong_portraits/`, `src-sheets/seedance/`.
+
+### ChatGPT — что ещё сделать
+
+Прикладывать `src-sheets/gumdong_guitar_src.png` (для крупных планов — ещё `gumdong_sheet.png`). Начало каждого промпта:
+> *Same character as the reference, same art style, same outfit (black tank top, grey jeans, spiked collar, barefoot). Plain white background, full figure with margins, no text.*
+
+| # | Спрайт | Сцена / время | Промпт (после общей фразы) | Статус |
+|---|---|---|---|---|
+| 1 | Портрет анфас, испуганный + 4 рта | 03 (0:12–0:21), 07 | *Close-up portrait from chest up, facing camera, worried scared expression, ears slightly back, eyes wide, mouth closed. High resolution.* | ✅ |
+| 2 | Портрет 3/4 + 4 рта | 06 (0:33–0:38), 07 | *Close-up portrait from chest up, three-quarter view, sad tired eyes, mouth closed.* | ✅ |
+| 3 | У микрофона с гитарой, по пояс, поёт | 08 (0:45–0:51) | *Waist-up, standing at a microphone stand, singing into it, eyes half-closed, holding the black Les Paul exactly like the reference (left-handed: neck in her RIGHT hand).* | ⬜ |
+| 4 | Со спины с гитарой, в полный рост | 02 (0:08–0:12, титр) | *Full body from behind, guitar strap over one shoulder, guitar neck visible on the left side, tail visible, head slightly lowered.* | ⬜ |
+| 5 | Поёт, голова поднята, в полный рост | 10 (0:59–1:05) | *Full body, playing guitar, head tilted up, singing with open mouth, eyes closed, same guitar and pose as reference.* | ⬜ |
+| 6 | Глаза крупно (по желанию) | 07, финал | *Extreme close-up of eyes only, red eyes, scared, wide horizontal crop.* | ⬜ |
+
+**Рты для липсинка:** готовый портрет → *«edit this image, change ONLY the mouth, keep everything else identical»* → закрыт / приоткрыт / «А» / «О». Небольшие сдвиги головы не страшны — выравниваются при вырезке (так сделано для портрета 3/4).
+
+### Seedance — ролики
+
+Первый кадр — готовый спрайт; камера неподвижна, фон белый, фигура целиком в кадре.
+
+| # | Ролик | Первый кадр | Длина | Сцена | Статус |
+|---|---|---|---|---|---|
+| S1 | Спокойная игра, лёгкое покачивание, цикл | `gumdong_guitar_src.png` | 3–5 с | 09, 01, 05 | ✅ `gumdong_play1` |
+| S1b | **Энергичный риф**, цикл | `gumdong_guitar_src.png` | 4–5 с | 09 (нарастание), 10 | ⬜ |
+| S1c | Гриф вверх, «рок-стойка» (по желанию) | `gumdong_guitar_src.png` | 3 с | 09, удар перед 10 | ⬜ |
+| S2 | Покачивание у микрофона, цикл | спрайт №3 | 2–3 с | 08 | ⬜ |
+| S3 | Поднимает голову к свету | спрайт №5 | 2–3 с | 10, перед блэкаутом 1:03.4 | ⬜ |
+| S4 | Испуганно оглядывается (по желанию) | портрет анфас | 2 с | 03 / 04 | ⬜ |
+
+**S1** — *She strums the guitar with her left hand, slight head nod to the beat, hair and tail sway gently. Static camera, white background. End in the same pose as the start.*
+
+**S1b, энергичный риф** —
+> *She plays a fast, energetic punk rock riff on her black Les Paul: quick hard down-strokes with her LEFT hand over the pickups, her RIGHT hand slides along the neck changing chords. She bends her knees slightly and headbangs on every beat, hair, ears and tail bounce with the rhythm. Feet stay planted in place, whole body stays inside the frame. Fast steady tempo. Static camera, plain white background, no other objects. End in exactly the same pose as the first frame.*
+
+**S1c, рок-стойка** —
+> *She steps into a wide power stance and lifts the guitar neck up high, strumming hard with her LEFT hand, head thrown back, hair flying. Then she returns to the starting pose. Feet stay inside the frame. Static camera, plain white background. End in exactly the same pose as the first frame.*
+
+**S2** — *She sways slowly at the microphone, singing softly, eyes half closed. Static camera. End in the same pose as the start.*
+
+**S3** — *She slowly raises her head toward a light above, eyes close. Static camera, white background.*
+
+**S4** — *She glances nervously to the side, ears flatten. Static camera.*
+
+Советы для Seedance: если лицо «плывёт» — короче ролик (3–4 с) и меньше движения головы; если гитара перевернулась в правую руку — перегенерировать, отзеркалить нельзя. Водяной знак в углу не мешает — вырезается.
