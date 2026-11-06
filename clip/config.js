@@ -25,23 +25,27 @@ const CLIP = {
 const b = k => CLIP.beatOffset + k * 60 / CLIP.bpm;   // время доли № k
 
 const ASSETS = {
-  vox_front: 'assets/sprites/vox_front.png', vox_side: 'assets/sprites/vox_side.png', vox_back: 'assets/sprites/vox_back.png',
-  vox_face: 'assets/sprites/vox_face.png', vox_face34: 'assets/sprites/vox_face34.png',
-  bass_front: 'assets/sprites/bass_front.png', bass_side: 'assets/sprites/bass_side.png',
-  drum_front: 'assets/sprites/drum_front.png', drum_34: 'assets/sprites/drum_34.png', drum_face: 'assets/sprites/drum_face.png',
+  gumdong_guitar: 'assets/sprites/gumdong_guitar.png',
+  gumdong_front: 'assets/sprites/gumdong_front.png', gumdong_side: 'assets/sprites/gumdong_side.png', gumdong_back: 'assets/sprites/gumdong_back.png',
+  gumdong_face: 'assets/sprites/gumdong_face.png', gumdong_face34: 'assets/sprites/gumdong_face34.png',
+  rossali_bass: 'assets/sprites/rossali_bass.png', rossali_front: 'assets/sprites/rossali_front.png', rossali_side: 'assets/sprites/rossali_side.png',
+  lupa_front: 'assets/sprites/lupa_front.png', lupa_34: 'assets/sprites/lupa_34.png', lupa_face: 'assets/sprites/lupa_face.png',
   maeve_front: 'assets/sprites/maeve_front.png', alex_front: 'assets/sprites/alex_front.png',
 };
 
 // Персонажи: позы → ассет. mouth — где рот (доли картинки) для липсинка; inst — куда вешать гитару-заглушку.
+// Имена: Gumdong — вокал и гитара (играет левой рукой — спрайты не отзеркаливать), Rossali — бас, Lupa — ударные.
+// Базовые позы для общих и средних планов — с инструментом (guitar / bass); с них же генерировать новые позы и ролики Seedance.
 const CHARACTERS = {
-  vox: { name: 'Вокалистка (гитара)', height: 1.68, fallback: 'front', poses: {
-    front: { key: 'vox_front', mouth: { x: .447, y: .191, w: .046 }, inst: { x: .5, y: .58 } },
-    side: 'vox_side', back: 'vox_back',
-    face: { key: 'vox_face', mouth: { x: .548, y: .724, w: .095 } },
-    face34: { key: 'vox_face34', mouth: { x: .182, y: .773, w: .1 } },
+  gumdong: { name: 'Gumdong — вокал, гитара', height: 1.68, fallback: 'guitar', poses: {
+    guitar: { key: 'gumdong_guitar', mouth: { x: .538, y: .189, w: .04 } },
+    front: { key: 'gumdong_front', mouth: { x: .447, y: .191, w: .046 }, inst: { x: .5, y: .58 } },   // с листа, без гитары
+    side: 'gumdong_side', back: 'gumdong_back',
+    face: { key: 'gumdong_face', mouth: { x: .548, y: .724, w: .095 } },
+    face34: { key: 'gumdong_face34', mouth: { x: .182, y: .773, w: .1 } },
   } },
-  bass: { name: 'Басистка', height: 1.74, fallback: 'front', poses: { front: { key: 'bass_front', inst: { x: .5, y: .56 } }, side: 'bass_side' } },
-  drum: { name: 'Барабанщица', height: 1.6, fallback: 'front', poses: { front: 'drum_front', q34: 'drum_34', face: 'drum_face' } },
+  rossali: { name: 'Rossali — бас', height: 1.74, fallback: 'bass', poses: { bass: 'rossali_bass', front: { key: 'rossali_front', inst: { x: .5, y: .56 } }, side: 'rossali_side' } },
+  lupa: { name: 'Lupa — ударные', height: 1.6, fallback: 'front', poses: { front: 'lupa_front', q34: 'lupa_34', face: 'lupa_face' } },
   maeve: { name: 'Maeve (зритель)', height: 1.88, fallback: 'front', poses: { front: 'maeve_front' } },
   alex: { name: 'Alex (танцует у сцены)', height: 1.75, fallback: 'front', poses: { front: 'alex_front' } },
 };
@@ -70,10 +74,10 @@ const SET = {
     // сцена
     { id: 'amp_l', type: 'amp', x: -4.1, z: 16.4 }, { id: 'amp_r', type: 'amp', x: 4.0, z: 16.2, w: 1.0, h: 1.3 },
     { id: 'kit', type: 'drums', x: 2.4, z: 15.3 },
-    { id: 'drum', type: 'char', char: 'drum', pose: 'front', x: 2.4, y: .7, z: 15.75, seat: .62, seatY: .58, zone: 'stage', anim: ['headbang'] },
-    { id: 'bass', type: 'char', char: 'bass', pose: 'front', x: -2.5, y: .7, z: 14.2, zone: 'stage', inst: 'bass', anim: [['bob', 1], ['sway', .5]], phase: .2 },
-    { id: 'mic', type: 'mic', x: .02, z: 12.95, h: 1.3 },
-    { id: 'vox', type: 'char', char: 'vox', pose: 'front', x: 0, y: .7, z: 13.3, zone: 'stage', inst: 'guitar', mouth: true, anim: ['breath', ['bob', .6]] },
+    { id: 'lupa', type: 'char', char: 'lupa', pose: 'front', x: 2.4, y: .7, z: 15.75, seat: .62, seatY: .58, zone: 'stage', anim: ['headbang'] },
+    { id: 'rossali', type: 'char', char: 'rossali', pose: 'bass', x: -2.5, y: .7, z: 14.2, zone: 'stage', anim: [['bob', 1], ['sway', .5]], phase: .2 },
+    { id: 'mic', type: 'mic', x: .09, z: 12.95, h: 1.2 },
+    { id: 'gumdong', type: 'char', char: 'gumdong', pose: 'guitar', x: 0, y: .7, z: 13.3, zone: 'stage', mouth: true, anim: ['breath', ['bob', .6]] },
     // зал: столики и зрители (тени — заглушки до листов зрителей)
     { id: 't1', type: 'table', x: -3.6, z: 9.4 }, { id: 'maeve', type: 'char', char: 'maeve', pose: 'front', x: -3.5, z: 9.85, seat: .5, seatY: .42, zone: 'house', eyeY: .92 },
     { id: 't2', type: 'table', x: 2.9, z: 9.0 }, { id: 'g1', type: 'ghost', x: 2.6, z: 9.45, color: '#4a3040' }, { id: 'g2', type: 'ghost', x: 3.35, z: 9.5, color: '#2d3a4a', ears: 1.3, snout: true },
