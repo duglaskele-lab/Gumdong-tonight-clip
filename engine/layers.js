@@ -40,7 +40,7 @@ LAYER.bg = (ctx, L, S, lt, T) => {
 // спрайт крупным планом. {char,pose | img, x,y (точка привязки), h (высота на экране px), anchor:'bottom'|'center', crop, flip, shade, rim, mouth, anim}
 LAYER.sprite = (ctx, L, S, lt, T) => {
   let im, P = {};
-  if (L.char) { P = poseOf(L.char, L.pose); im = E.img[P.key]; } else im = E.img[L.img];
+  if (L.char) { P = poseOf(L.char, L.pose); im = poseImg(P, T, L); } else im = E.img[L.img];
   if (!im) return;
   const crop = L.crop || null; const cw = crop ? crop[2] : 1, ch = crop ? crop[3] : 1;
   const h = L.h, w = h * (im.width * cw) / (im.height * ch);
@@ -48,7 +48,7 @@ LAYER.sprite = (ctx, L, S, lt, T) => {
   let x = L.x, y = L.y; ctx.save(); ctx.translate(x + an.dx * h, y + an.dy * h); ctx.rotate((L.r || 0) + an.r); ctx.scale(1, an.sy);
   const ox = -w / 2, oy = L.anchor === 'center' ? -h / 2 : (L.anchor === 'top' ? 0 : -h);
   drawImg(ctx, im, ox, oy, w, h, { crop, flip: L.flip, shade: L.shade, shadeColor: L.shadeColor, rim: L.rim, tint: L.tint, sil: L.sil });
-  if (L.mouth && P.mouth) drawMouth(ctx, ox, oy, w, h, P.mouth, voxOpen(T), crop, L.flip);
+  if (L.mouth && P.mouth && !P.mouths) drawMouth(ctx, ox, oy, w, h, P.mouth, voxOpen(T), crop, L.flip);
   ctx.restore();
 };
 

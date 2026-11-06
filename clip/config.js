@@ -25,7 +25,7 @@ const CLIP = {
 const b = k => CLIP.beatOffset + k * 60 / CLIP.bpm;   // время доли № k
 
 // Анимации (кадры Seedance, вырезаны tools/whitecut.py): assets/anim/<имя>/fNNN.webp
-// gumdong_play1 — спокойная игра на гитаре, 119 кадров, 24 fps, цикл (движок пока анимации не проигрывает)
+// gumdong_play1 — спокойная игра на гитаре, 119 кадров, 24 fps, цикл. В позе: {anim: 'gumdong_play1'}
 // gumdong_sing1 — поёт с поднятой головой и играет (S2), 119 кадров, 24 fps, цикл
 const ANIM_FILES = {
   gumdong_play1: { dir: 'assets/anim/gumdong_play1', frames: 119, fps: 24, loop: true },
@@ -58,12 +58,14 @@ const CHARACTERS = {
     side: 'gumdong_side', back: 'gumdong_back',
     face: { key: 'gumdong_face', mouth: { x: .548, y: .724, w: .095 } },
     face34: { key: 'gumdong_face34', mouth: { x: .182, y: .773, w: .1 } },
-    // новые портреты: mouths — нарисованные рты для липсинка (движок пока их не переключает — следующий шаг)
+    // портреты: mouths — нарисованные рты [закрыт, приоткрыт, А, О]; при mouth: true движок выбирает по голосу
     scared: { key: 'gumdong_scared_closed', mouth: { x: .499, y: .446, w: .106 },
       mouths: ['gumdong_scared_closed', 'gumdong_scared_half', 'gumdong_scared_wide', 'gumdong_scared_o'] },
     q34: { key: 'gumdong_34_half', mouth: { x: .364, y: .46, w: .08 },
       mouths: ['gumdong_34_closed', 'gumdong_34_half', 'gumdong_34_wide', 'gumdong_34_o'] },
-    mic: 'gumdong_mic',                 // по пояс у микрофона с гитарой, поёт (рот открыт)
+    play: { key: 'gumdong_guitar', anim: 'gumdong_play1' },   // анимация: играет на гитаре (Seedance S1, цикл 5 с)
+    sing: { key: 'gumdong_sing_up', anim: 'gumdong_sing1' },  // анимация: поёт и играет, голова вверх (S2)
+    mic: { key: 'gumdong_mic', part: .6 },  // по пояс у микрофона с гитарой, поёт (рот открыт); part — доля роста сверху
     singUp: 'gumdong_sing_up',          // в полный рост, голова вверх, глаза закрыты, поёт
     backGuitar: 'gumdong_back_guitar',  // со спины с гитарой (отзеркалена: гриф в правой руке — она левша)
     eyes: 'gumdong_eyes',               // глаза крупно — прямоугольный кадр, не вырезан
@@ -100,8 +102,8 @@ const SET = {
     { id: 'kit', type: 'drums', x: 2.4, z: 15.3 },
     { id: 'lupa', type: 'char', char: 'lupa', pose: 'front', x: 2.4, y: .7, z: 15.75, seat: .62, seatY: .58, zone: 'stage', anim: ['headbang'] },
     { id: 'rossali', type: 'char', char: 'rossali', pose: 'bass', x: -2.5, y: .7, z: 14.2, zone: 'stage', anim: [['bob', 1], ['sway', .5]], phase: .2 },
-    { id: 'mic', type: 'mic', x: .09, z: 12.95, h: 1.2 },
-    { id: 'gumdong', type: 'char', char: 'gumdong', pose: 'guitar', x: 0, y: .7, z: 13.3, zone: 'stage', mouth: true, anim: ['breath', ['bob', .6]] },
+    { id: 'mic', type: 'mic', x: .09, z: 12.95, h: 1.36 },   // у рта; в сцене 08 спрятан — стойка в спрайте у микрофона
+    { id: 'gumdong', type: 'char', char: 'gumdong', pose: 'play', x: 0, y: .7, z: 13.3, zone: 'stage', mouth: true },   // поза play — анимация, своё движение не нужно
     // зал: столики и зрители (тени — заглушки до листов зрителей)
     { id: 't1', type: 'table', x: -3.6, z: 9.4 }, { id: 'maeve', type: 'char', char: 'maeve', pose: 'front', x: -3.5, z: 9.85, seat: .5, seatY: .42, zone: 'house', eyeY: .92 },
     { id: 't2', type: 'table', x: 2.9, z: 9.0 }, { id: 'g1', type: 'ghost', x: 2.6, z: 9.45, color: '#4a3040' }, { id: 'g2', type: 'ghost', x: 3.35, z: 9.5, color: '#2d3a4a', ears: 1.3, snout: true },

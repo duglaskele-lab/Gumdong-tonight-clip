@@ -44,6 +44,27 @@ function voxOpen(t) {
   return clamp((v - .25) / .6, 0, 1);
 }
 
+// Нарисованные рты: 0 закрыт, 1 приоткрыт, 2 «А» (широко), 3 «О». Выбор по громкости голоса;
+// на громком слоге «А» или «О» — решает хеш начала слога (детерминированно, без мигания внутри слога).
+function mouthIdx(t) {
+  const v = voxOpen(t); if (v < .14) return 0; if (v < .5) return 1;
+  const env = window.VOX_ENV; let i = Math.floor(t * env.fps);
+  for (let k = 0; k < 40 && i > 0 && voxOpen((i - 1) / env.fps) >= .14; k++) i--;   // начало слога
+  return rand(i * 7.31) < .35 ? 3 : 2;
+}
+// Картинка позы в момент T: кадр анимации (P.anim), рот (P.mouths, если o.mouth) или обычный спрайт.
+// o.animOffset — сдвиг цикла в секундах (чтобы соседние сцены не начинались с одного кадра), o.animSpeed.
+function poseImg(P, T, o = {}) {
+  if (P.anim && E.anim && E.anim[P.anim] && E.anim[P.anim].length) {
+    const fr = E.anim[P.anim], a = ANIM_FILES[P.anim], n = fr.length;
+    let i = Math.floor((T * (o.animSpeed || P.animSpeed || 1) + (o.animOffset || P.animOffset || 0)) * a.fps);
+    i = a.loop === false ? clamp(i, 0, n - 1) : ((i % n) + n) % n;
+    return fr[i] || E.img[P.key];
+  }
+  if (o.mouth && P.mouths) return E.img[P.mouths[mouthIdx(T)]] || E.img[P.key];
+  return E.img[P.key];
+}
+
 // ---------- loading ----------
 const loadScript = src => new Promise((ok, no) => { const s = document.createElement('script'); s.src = src; s.charset = 'utf-8'; s.onload = ok; s.onerror = () => no(src); document.head.appendChild(s); });
 const loadImg = src => new Promise(ok => { const im = new Image(); im.onload = () => ok(im); im.onerror = () => { console.warn('missing', src); ok(null); }; im.src = (window.__A && __A[src]) || src; });
@@ -51,6 +72,12 @@ async function loadAll() {
   for (const n of CLIP.scenes) { try { await loadScript('clip/scenes/' + n + '.js'); } catch (e) { console.error('scene file failed', e); } }
   SCENES.sort((a, b) => a.start - b.start);
   await Promise.all(Object.entries(ASSETS).map(async ([k, p]) => { E.img[k] = await loadImg(p); }));
+  // покадровые анимации (Seedance): ANIM_FILES[name] = {dir, frames, fps, loop} → E.anim[name] = [Image…]
+  E.anim = {};
+  const AF = typeof ANIM_FILES !== 'undefined' ? ANIM_FILES : {};
+  await Promise.all(Object.entries(AF).map(async ([k, a]) => {
+    E.anim[k] = await Promise.all(Array.from({ length: a.frames }, (_, i) => loadImg(`${a.dir}/f${String(i).padStart(3, '0')}.${a.ext || 'webp'}`)));
+  }));
   try { await Promise.all(CLIP.fonts.map(f => document.fonts.load(f))); } catch (e) {}
   E.buf = document.createElement('canvas'); E.buf.width = W; E.buf.height = H; E.bctx = E.buf.getContext('2d');
   E.ready = true;

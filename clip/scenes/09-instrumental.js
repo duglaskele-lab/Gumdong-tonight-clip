@@ -10,6 +10,6 @@ scene({
   ] },
   set: { light: { house: .2, stage: .9, beams: 1, rim: .8 } },
   post: { glitch: lt => clamp((lt - 3.8) / 3.3, 0, 1) * .75, chroma: lt => lt > 3.8 ? 3 + (lt - 3.8) * 2 : 0, vhs: 1 },
-  overlay: [{ type: 'note', text: '09 · проигрыш: сюда циклы игры из Seedance' }],
+  overlay: [{ type: 'note', text: '09 · проигрыш: Gumdong — цикл игры (S1)' }],
 });
 }

@@ -170,11 +170,13 @@ const ENT = {};
 
 // персонаж-спрайт. e: {char, pose, x,y,z, h? (м), seat (доля сверху, если сидит), seatY, flip, anim, inst:'guitar'|'bass', mouth:true}
 ENT.char = (ctx, e, L, lt, T, S) => {
-  const C = CHARACTERS[e.char], P = poseOf(e.char, e.pose); const im = E.img[P.key]; if (!im) return;
-  const p = proj(e.x, (e.y || 0) + (e.seat ? (e.seatY ?? .45) : 0), e.z); if (!p) return;
-  const fullH = (e.h || C.height) * p[2] * (P.scale || 1);
+  const C = CHARACTERS[e.char], P = poseOf(e.char, e.pose); const im = poseImg(P, T, e); if (!im) return;
+  // P.part — спрайт «по пояс»: картинка покрывает верхнюю долю part роста, низ картинки висит на высоте (1-part)·рост
+  const hm = (e.h || C.height) * (P.scale || 1), part = P.part || 1;
+  const p = proj(e.x + (P.dx || 0), (e.y || 0) + (e.seat ? (e.seatY ?? .45) : hm * (1 - part)), e.z); if (!p) return;
+  const fullH = hm * p[2];
   const crop = e.seat ? [0, 0, 1, e.seat] : (P.crop || null);
-  const hh = fullH * (crop ? crop[3] : 1), ww = hh * (im.width * (crop ? crop[2] : 1)) / (im.height * (crop ? crop[3] : 1));
+  const hh = fullH * (crop ? crop[3] : 1) * part, ww = hh * (im.width * (crop ? crop[2] : 1)) / (im.height * (crop ? crop[3] : 1));
   const an = animOf(e.anim, T + (e.phase || 0));
   const light = entLight(e, L);
   ctx.save(); ctx.translate(p[0] + an.dx * fullH, p[1] + an.dy * fullH); ctx.rotate(an.r); ctx.scale(1, an.sy);
@@ -182,7 +184,7 @@ ENT.char = (ctx, e, L, lt, T, S) => {
   if (e.zone === 'stage' && L.rim) o.rim = { color: L.rimColor || '#ff2a55', amount: L.rim * (1 - light * .5), depth: .25 };
   drawImg(ctx, im, -ww / 2, -hh, ww, hh, o);
   if (e.inst) drawInstrument(ctx, e.inst, -ww / 2, -hh, ww, fullH, light, P);
-  if (e.mouth && P.mouth) drawMouth(ctx, -ww / 2, -hh, ww, hh, P.mouth, voxOpen(T), crop, e.flip);
+  if (e.mouth && P.mouth && !P.mouths) drawMouth(ctx, -ww / 2, -hh, ww, hh, P.mouth, voxOpen(T), crop, e.flip);
   ctx.restore();
   if (e.eyes) eyesGlow(ctx, e, p, fullH, L, lt, T);
 };
