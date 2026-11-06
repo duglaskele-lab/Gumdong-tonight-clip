@@ -6,8 +6,8 @@ const CLIP = {
   ver: 6,   // поднимать, когда картинку заменили под тем же именем (сбрасывает кеш браузера)
   audio: 'assets/audio/song.mp3',
   bpm: 143.555, beatOffset: 0.186,          // доля ≈ 0.418 с
-  duration: 68.0, fadeOut: 66.0,          // fadeOut — картинка уходит в чёрное к концу
-  audioFade: [64.0, 68.0],                 // звук быстро затухает 1:04 → 1:08 (бас не обрывается)
+  duration: 71.0, fadeOut: 66.0,          // fadeOut — картинка уходит в чёрное к концу
+  audioFade: [65.8, 71.0],                 // звук быстро затухает от блэкаута 1:05.8 до 1:11 («-night» звучит в полную силу)
   fonts: ['80px "Dela Gothic One"', '40px VT323', '900 40px Nunito', '700 20px "JetBrains Mono"'],
   // глобальный пост; сцена может переопределить полем post
   post: { pixel: 3, levels: 0, grain: .10, vignette: .55, scan: .06 },
