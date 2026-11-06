@@ -70,13 +70,20 @@ function mouthIdx(t) {
 }
 // Картинка позы в момент T: кадр анимации (P.anim), рот (P.mouths, если o.mouth) или обычный спрайт.
 // o.animOffset — сдвиг цикла в секундах (чтобы соседние сцены не начинались с одного кадра), o.animSpeed.
+function animIdx(P, T, o = {}) {
+  const fr = E.anim && E.anim[P.anim]; if (!P.anim || !fr || !fr.length) return -1;
+  const a = ANIM_FILES[P.anim], n = fr.length;
+  const i = Math.floor((T * (o.animSpeed || P.animSpeed || 1) + (o.animOffset ?? P.animOffset ?? 0)) * a.fps);
+  return a.loop === false ? clamp(i, 0, n - 1) : ((i % n) + n) % n;
+}
+// Где рот в момент T: у анимации с дорожкой ANIM_TRACK (assets/data/anim_track.js) — по кадру, иначе P.mouth.
+function mouthAt(P, T, o) {
+  const tr = window.ANIM_TRACK && P.anim && ANIM_TRACK[P.anim]; if (!tr || !P.mouth) return P.mouth;
+  const i = animIdx(P, T, o); return i >= 0 && tr[i] ? Object.assign({}, P.mouth, { x: tr[i][0], y: tr[i][1] }) : P.mouth;
+}
 function poseImg(P, T, o = {}) {
-  if (P.anim && E.anim && E.anim[P.anim] && E.anim[P.anim].length) {
-    const fr = E.anim[P.anim], a = ANIM_FILES[P.anim], n = fr.length;
-    let i = Math.floor((T * (o.animSpeed || P.animSpeed || 1) + (o.animOffset || P.animOffset || 0)) * a.fps);
-    i = a.loop === false ? clamp(i, 0, n - 1) : ((i % n) + n) % n;
-    return fr[i] || E.img[P.key];
-  }
+  const i = animIdx(P, T, o);
+  if (i >= 0) return E.anim[P.anim][i] || E.img[P.key];
   if (o.mouth && P.mouths) return E.img[P.mouths[mouthIdx(T)]] || E.img[P.key];
   return E.img[P.key];
 }
@@ -131,11 +138,19 @@ function drawImg(ctx, im, x, y, w, h, o = {}) {
 }
 
 // Рот для липсинка поверх спрайта. m: {x,y,w} доли спрайта (без crop), open 0..1
+// m.cover {rx, ry} (в ширинах рта) — закрасить нарисованный на спрайте рот цветом кожи m.lip и рисовать свой,
+// в тишине — закрытый рот линией (для спрайта, где рот нарисован открытым).
 function drawMouth(ctx, x, y, w, h, m, open, crop, flip) {
-  if (open < .08) return;
   const c = crop || [0, 0, 1, 1];
   let mx = (m.x - c[0]) / c[2], my = (m.y - c[1]) / c[3]; if (flip) mx = 1 - mx;
   const mw = m.w / c[2] * w, cx = x + mx * w, cy = y + my * h;
+  if (m.cover) {
+    ctx.save(); ctx.fillStyle = m.lip; ctx.shadowColor = m.lip; ctx.shadowBlur = mw * .25;
+    ctx.beginPath(); ctx.ellipse(cx, cy, m.cover.rx * mw, m.cover.ry * mw, 0, 0, Math.PI * 2); ctx.fill(); ctx.restore();
+    if (open < .08) { ctx.save(); ctx.strokeStyle = '#2a1414'; ctx.lineWidth = Math.max(1.2, mw * .07); ctx.lineCap = 'round';
+      ctx.beginPath(); ctx.moveTo(cx - mw * .32, cy + mw * .04); ctx.quadraticCurveTo(cx, cy - mw * .06, cx + mw * .32, cy + mw * .04); ctx.stroke(); ctx.restore(); return; }
+  }
+  if (open < .08) return;
   const rw = mw * (.42 + .12 * open), rh = mw * (.08 + .42 * open);
   ctx.save();
   ctx.fillStyle = m.lip || '#c9a07c'; ctx.beginPath(); ctx.ellipse(cx, cy + rh * .35, rw * 1.08, rh * 1.05 + mw * .05, 0, 0, Math.PI * 2); ctx.fill();

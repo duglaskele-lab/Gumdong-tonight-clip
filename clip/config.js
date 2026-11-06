@@ -3,7 +3,7 @@
 'use strict';
 const CLIP = {
   title: 'Can I Sleep with You Tonight?',
-  ver: 5,   // поднимать, когда картинку заменили под тем же именем (сбрасывает кеш браузера)
+  ver: 6,   // поднимать, когда картинку заменили под тем же именем (сбрасывает кеш браузера)
   audio: 'assets/audio/song.mp3',
   bpm: 143.555, beatOffset: 0.186,          // доля ≈ 0.418 с
   duration: 67.5, fadeOut: 66.0,
@@ -21,6 +21,7 @@ const CLIP = {
     '08-spotlight-alone',
     '09-instrumental',
     '10-chorus-tonight',
+    '11-tonight-closeup',
   ],
 };
 const b = k => CLIP.beatOffset + k * 60 / CLIP.bpm;   // время доли № k
@@ -68,9 +69,13 @@ const CHARACTERS = {
     q34: { key: 'gumdong_34_half', mouth: { x: .364, y: .46, w: .08 },
       mouths: ['gumdong_34_closed', 'gumdong_34_half', 'gumdong_34_wide', 'gumdong_34_o'] },
     play: { key: 'gumdong_guitar', anim: 'gumdong_play1' },   // анимация: играет на гитаре (Seedance S1, цикл 5 с)
+    // то же + процедурный рот по голосу (положение рта по кадрам — assets/data/anim_track.js); для общих планов
+    playSing: { key: 'gumdong_guitar', anim: 'gumdong_play1', mouth: { x: .523, y: .192, w: .045, lip: '#c9a07c' } },
     sing: { key: 'gumdong_sing_up', anim: 'gumdong_sing1' },  // анимация: поёт и играет, голова вверх (S2)
-    mic: { key: 'gumdong_mic', part: .6 },
-    micUp: { key: 'gumdong_mic', part: .6, anim: 'gumdong_mic_up' },  // анимация S3: у микрофона поднимает голову к свету  // по пояс у микрофона с гитарой, поёт (рот открыт); part — доля роста сверху
+    // по пояс у микрофона (cowboy shot); part — доля роста сверху. Рот нарисован открытым → cover закрашивает его,
+    // движок рисует свой рот по голосу (процедурно, пока нет 4 нарисованных ртов)
+    mic: { key: 'gumdong_mic', part: .6, mouth: { x: .5425, y: .262, w: .036, lip: '#cda98c', cover: { rx: .78, ry: .82 } } },
+    micUp: { key: 'gumdong_mic', part: .6, anim: 'gumdong_mic_up' },  // анимация S3: у микрофона поднимает голову к свету
     singUp: 'gumdong_sing_up',          // в полный рост, голова вверх, глаза закрыты, поёт
     backGuitar: 'gumdong_back_guitar',  // со спины с гитарой (отзеркалена: гриф в правой руке — она левша)
     eyes: 'gumdong_eyes',               // глаза крупно — прямоугольный кадр, не вырезан
@@ -89,7 +94,7 @@ const LYRICS = [
   { t: 29.98, end: 32.60, text: "i'm really scared" },
   { t: 33.66, end: 38.90, text: '"mom, can i sleep with you tonight?"' },
   { t: 39.10, end: 46.60, text: 'again, again, again, again, again…' },
-  { t: 47.00, end: 52.00, text: '"can i sleep with you tonight?"' },
+  { t: 48.20, end: 52.00, text: '"can i sleep with you tonight?"' },   // голос вступает в 48.2 (до этого тишина)
   { t: 60.60, end: 65.80, text: '"can i sleep with you tonight?"' },
 ];
 

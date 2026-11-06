@@ -48,7 +48,7 @@ LAYER.sprite = (ctx, L, S, lt, T) => {
   let x = L.x, y = L.y; ctx.save(); ctx.translate(x + an.dx * h, y + an.dy * h); ctx.rotate((L.r || 0) + an.r); ctx.scale(1, an.sy);
   const ox = -w / 2, oy = L.anchor === 'center' ? -h / 2 : (L.anchor === 'top' ? 0 : -h);
   drawImg(ctx, im, ox, oy, w, h, { crop, flip: L.flip, shade: L.shade, shadeColor: L.shadeColor, rim: L.rim, tint: L.tint, sil: L.sil });
-  if (L.mouth && P.mouth && !P.mouths) drawMouth(ctx, ox, oy, w, h, P.mouth, voxOpen(T), crop, L.flip);
+  if (L.mouth && P.mouth && !P.mouths) drawMouth(ctx, ox, oy, w, h, mouthAt(P, T, L), voxOpen(T), crop, L.flip);
   ctx.restore();
 };
 

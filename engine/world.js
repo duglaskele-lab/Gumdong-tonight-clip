@@ -184,7 +184,7 @@ ENT.char = (ctx, e, L, lt, T, S) => {
   if (e.zone === 'stage' && L.rim) o.rim = { color: L.rimColor || '#ff2a55', amount: L.rim * (1 - light * .5), depth: .25 };
   drawImg(ctx, im, -ww / 2, -hh, ww, hh, o);
   if (e.inst) drawInstrument(ctx, e.inst, -ww / 2, -hh, ww, fullH, light, P);
-  if (e.mouth && P.mouth && !P.mouths) drawMouth(ctx, -ww / 2, -hh, ww, hh, P.mouth, voxOpen(T), crop, e.flip);
+  if (e.mouth && P.mouth && !P.mouths) drawMouth(ctx, -ww / 2, -hh, ww, hh, mouthAt(P, T, e), voxOpen(T), crop, e.flip);
   ctx.restore();
   if (e.eyes) eyesGlow(ctx, e, p, fullH, L, lt, T);
 };
