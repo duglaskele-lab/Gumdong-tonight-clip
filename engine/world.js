@@ -55,10 +55,12 @@ function glow(ctx, x, y, r, color, a = 1) {
 function worldState(S, lt, T) {
   const set = S.set || {};
   const light = Object.assign({}, SET.light, typeof set.light === 'function' ? set.light(lt, T) : set.light);
-  const hide = new Set(set.hide || []);
+  // hide, ents, add могут быть функциями (lt, T) — меняются по ходу сцены
+  const hide = new Set((typeof set.hide === 'function' ? set.hide(lt, T) : set.hide) || []);
+  const ov = typeof set.ents === 'function' ? set.ents(lt, T) : set.ents;
   const ents = SET.ents.filter(e => !hide.has(e.id)).map(e => {
-    const o = set.ents && set.ents[e.id]; return o ? Object.assign({}, e, typeof o === 'function' ? o(lt, T) : o) : e;
-  }).concat(set.add || []);
+    const o = ov && ov[e.id]; return o ? Object.assign({}, e, typeof o === 'function' ? o(lt, T) : o) : e;
+  }).concat((typeof set.add === 'function' ? set.add(lt, T) : set.add) || []);
   return { light, ents };
 }
 
@@ -180,7 +182,8 @@ ENT.char = (ctx, e, L, lt, T, S) => {
   const an = animOf(e.anim, T + (e.phase || 0));
   const light = entLight(e, L);
   ctx.save(); ctx.translate(p[0] + an.dx * fullH, p[1] + an.dy * fullH); ctx.rotate(an.r); ctx.scale(1, an.sy);
-  const o = { crop, flip: e.flip, shade: (1 - light) * .88, shadeColor: e.zone === 'stage' ? '#12040a' : '#07040a' };
+  const o = { crop, flip: e.flip, shade: (1 - light) * .88, shadeColor: e.zone === 'stage' ? '#12040a' : '#07040a',
+    sil: e.sil, silColor: e.silColor, alpha: e.alpha, glow: e.glow };   // sil 0..1 — заливка цветом silColor (силуэт), glow — свечение
   if (e.zone === 'stage' && L.rim) o.rim = { color: L.rimColor || '#ff2a55', amount: L.rim * (1 - light * .5), depth: .25 };
   drawImg(ctx, im, -ww / 2, -hh, ww, hh, o);
   if (e.inst) drawInstrument(ctx, e.inst, -ww / 2, -hh, ww, fullH, light, P);

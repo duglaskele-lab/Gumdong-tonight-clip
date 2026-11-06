@@ -107,7 +107,7 @@ const track = p => { E.load.total++; return p.then(v => { E.load.done++; return 
 function usedAnims() {
   const out = [], add = (ch, pose) => { const C = CHARACTERS[ch]; const P = C && C.poses[pose]; if (P && P.anim && !out.includes(P.anim)) out.push(P.anim); };
   for (const S of SCENES) {
-    const set = S.set || {}, ov = typeof set.ents === 'object' ? set.ents : {};
+    const set = S.set || {}, ov = (typeof set.ents === 'function' ? set.ents(0, S.start) : set.ents) || {};
     for (const e of SET.ents) if (e.type === 'char' && S.world) { let o = ov[e.id]; if (typeof o === 'function') o = o(0, S.start); add(e.char, (o && o.pose) || e.pose); }
     const walk = L => { if (!L) return; if (L.char) add(L.char, L.pose); (L.items || []).forEach(walk); };
     (S.layers || []).forEach(walk); (S.overlay || []).forEach(walk);
@@ -144,7 +144,7 @@ function drawImg(ctx, im, x, y, w, h, o = {}) {
   if (!im || w < 1 || h < 1) return;
   const c = o.crop || [0, 0, 1, 1];
   const sx = c[0] * im.width, sy = c[1] * im.height, sw = c[2] * im.width, sh = c[3] * im.height;
-  const need = o.shade || o.tint || o.sil || o.rim;
+  const need = o.shade || o.tint || o.sil || o.rim || o.glow;
   ctx.save(); if (o.alpha != null) ctx.globalAlpha *= o.alpha;
   if (!need) {
     if (o.flip) { ctx.translate(x + w, y); ctx.scale(-1, 1); ctx.drawImage(im, sx, sy, sw, sh, 0, 0, w, h); }
@@ -163,6 +163,7 @@ function drawImg(ctx, im, x, y, w, h, o = {}) {
     g.globalAlpha = o.rim.amount || .5; const gr = g.createLinearGradient(0, 0, 0, ph * (o.rim.depth || .35));
     gr.addColorStop(0, o.rim.color || '#ff3a5c'); gr.addColorStop(1, 'rgba(0,0,0,0)'); g.globalCompositeOperation = 'source-atop'; g.fillStyle = gr; g.fillRect(0, 0, pw, ph);
   }
+  if (o.glow) { ctx.shadowColor = o.glow.color || '#fff'; ctx.shadowBlur = o.glow.blur || 20; }   // свечение вокруг силуэта
   ctx.drawImage(cv, x - 1, y - 1); ctx.restore();
 }
 

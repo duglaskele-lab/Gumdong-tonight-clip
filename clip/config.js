@@ -3,10 +3,10 @@
 'use strict';
 const CLIP = {
   title: 'Can I Sleep with You Tonight?',
-  ver: 7,   // поднимать, когда картинку заменили под тем же именем (сбрасывает кеш браузера)
+  ver: 8,   // поднимать, когда картинку заменили под тем же именем (сбрасывает кеш браузера)
   audio: 'assets/audio/song_clip.mp3',   // первые 1:15 песни (быстрее грузится); полная — assets/audio/song.mp3
   bpm: 143.555, beatOffset: 0.186,          // доля ≈ 0.418 с
-  duration: 71.0, fadeOut: 66.0,          // fadeOut — картинка уходит в чёрное к концу
+  duration: 71.0, fadeOut: 69.4,          // fadeOut — картинка уходит в чёрное к концу
   audioFade: [65.8, 71.0],                 // звук быстро затухает от блэкаута 1:05.8 до 1:11 («-night» звучит в полную силу)
   fonts: ['80px "Dela Gothic One"', '40px VT323', '900 40px Nunito', '700 20px "JetBrains Mono"'],
   // глобальный пост; сцена может переопределить полем post
@@ -50,6 +50,7 @@ const ASSETS = {
   gumdong_mic: 'assets/sprites/gumdong_mic.png', gumdong_sing_up: 'assets/sprites/gumdong_sing_up.png',
   gumdong_back_guitar: 'assets/sprites/gumdong_back_guitar.png', gumdong_eyes: 'assets/sprites/gumdong_eyes.png',
   rossali_bass: 'assets/sprites/rossali_bass.png', rossali_front: 'assets/sprites/rossali_front.png', rossali_side: 'assets/sprites/rossali_side.png',
+  lupa_kit: 'assets/sprites/lupa_kit.png', lupa_portrait: 'assets/sprites/lupa_portrait.png', rossali_portrait: 'assets/sprites/rossali_portrait.png',
   lupa_front: 'assets/sprites/lupa_front.png', lupa_34: 'assets/sprites/lupa_34.png', lupa_face: 'assets/sprites/lupa_face.png',
   maeve_front: 'assets/sprites/maeve_front.png', alex_front: 'assets/sprites/alex_front.png',
 };
@@ -81,8 +82,10 @@ const CHARACTERS = {
     backGuitar: 'gumdong_back_guitar',  // со спины с гитарой (отзеркалена: гриф в правой руке — она левша)
     eyes: 'gumdong_eyes',               // глаза крупно — прямоугольный кадр, не вырезан
   } },
-  rossali: { name: 'Rossali — бас', height: 1.74, fallback: 'bass', poses: { bass: 'rossali_bass', front: { key: 'rossali_front', inst: { x: .5, y: .56 } }, side: 'rossali_side' } },
-  lupa: { name: 'Lupa — ударные', height: 1.6, fallback: 'front', poses: { front: 'lupa_front', q34: 'lupa_34', face: 'lupa_face' } },
+  rossali: { name: 'Rossali — бас', height: 1.74, fallback: 'bass', poses: { bass: 'rossali_bass', portrait: 'rossali_portrait',   // portrait — по грудь, с сигаретой (только крупные планы)
+     front: { key: 'rossali_front', inst: { x: .5, y: .56 } }, side: 'rossali_side' } },
+  lupa: { name: 'Lupa — ударные', height: 1.6, fallback: 'front', poses: { front: 'lupa_front', q34: 'lupa_34', face: 'lupa_face', portrait: 'lupa_portrait',
+    kit: { key: 'lupa_kit', scale: .86 } } },   // kit — за своей установкой (установка в картинке; рост картинки ≈ 1.37 м по бочке 22")
   maeve: { name: 'Maeve (зритель)', height: 1.88, fallback: 'front', poses: { front: 'maeve_front' } },
   alex: { name: 'Alex (танцует у сцены)', height: 1.75, fallback: 'front', poses: { front: 'alex_front' } },
 };
@@ -110,8 +113,8 @@ const SET = {
   ents: [
     // сцена
     { id: 'amp_l', type: 'amp', x: -4.1, z: 16.4 }, { id: 'amp_r', type: 'amp', x: 4.0, z: 16.2, w: 1.0, h: 1.3 },
-    { id: 'kit', type: 'drums', x: 2.4, z: 15.3 },
-    { id: 'lupa', type: 'char', char: 'lupa', pose: 'front', x: 2.4, y: .7, z: 15.75, seat: .62, seatY: .58, zone: 'stage', anim: ['headbang'] },
+    // установка кодом ({ type: 'drums' }) больше не нужна: она нарисована в спрайте lupa_kit
+    { id: 'lupa', type: 'char', char: 'lupa', pose: 'kit', x: 2.4, y: .7, z: 15.35, zone: 'stage' },   // Lupa вместе с установкой (картинка); установка кодом — kit, спрятана
     { id: 'rossali', type: 'char', char: 'rossali', pose: 'bass', x: -2.5, y: .7, z: 14.2, zone: 'stage', anim: [['bob', 1], ['sway', .5]], phase: .2 },
     { id: 'mic', type: 'mic', x: -.2, boom: .12, z: 12.95, h: 1.27 },   // стойка слева от неё (как в спрайтах у микрофона), штанга к губам; в сценах 08, 11 спрятана — стойка в спрайте
     { id: 'gumdong', type: 'char', char: 'gumdong', pose: 'play', x: 0, y: .7, z: 13.3, zone: 'stage', mouth: true },   // поза play — анимация, своё движение не нужно
