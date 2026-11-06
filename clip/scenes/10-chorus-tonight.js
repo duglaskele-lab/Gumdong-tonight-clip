@@ -8,7 +8,8 @@ scene({
     { t: OFF10, x: 0, y: 1.7, z: 9.7, pitch: 5, e: 'linear' },
   ] },
   set: {
-    ents: { gumdong: { pose: 'sing', animOffset: -b(144) } },   // анимация пения начинается с первого кадра сцены
+    hide: ['mic'],   // стойка закрывала открытый рот на «tonight» — она поёт, запрокинув голову
+    ents: { gumdong: { pose: 'sing', animOffset: 85 / 24 - 62.95 } },   // в S2 рот раскрывается на кадрах 85–100: кадр 85 — на «to-» (62.95), полностью открыт на «-night» (63.6)
     add: [{ id: 'tonight', type: 'text3d', text: 'TONIGHT', x: 0, y: 2.55, z: 17.25, size: 1.7, color: '#ffd9e6', glow: '#ff2a7a',
       alpha: lt => lt < OFF10 ? clamp(lt / .25, 0, 1) * .92 : 0 }],
     light: lt => lt < OFF10 ? { house: .3, stage: 1, beams: 1, rim: .9 }

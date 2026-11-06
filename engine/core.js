@@ -29,6 +29,22 @@ function keyAt(keys, t) {
   }
   return keys[keys.length - 1];
 }
+// Плавная траектория через все ключи (Catmull-Rom) без остановок на промежуточных точках.
+// Время идёт по всей длине пути с мягким разгоном в начале и торможением в конце (ease: 0 — равномерно, 1 — полностью синус).
+function splineAt(keys, t, ease = .65) {
+  if (!keys || keys.length < 2) return keyAt(keys, t);
+  const t0 = keys[0].t, t1 = keys[keys.length - 1].t, u = clamp((t - t0) / Math.max(1e-6, t1 - t0), 0, 1);
+  const tt = t0 + (lerp(u, .5 - Math.cos(Math.PI * u) / 2, ease)) * (t1 - t0);
+  let i = 1; while (i < keys.length - 1 && tt > keys[i].t) i++;
+  const p1 = keys[i - 1], p2 = keys[i], p0 = keys[i - 2] || p1, p3 = keys[i + 1] || p2;
+  const s = clamp((tt - p1.t) / Math.max(1e-6, p2.t - p1.t), 0, 1), s2 = s * s, s3 = s2 * s, o = {};
+  for (const k in p1) {
+    if (typeof p1[k] !== 'number' || typeof p2[k] !== 'number' || k === 't') continue;
+    const a = p0[k] ?? p1[k], b = p1[k], c = p2[k], d = p3[k] ?? p2[k];
+    o[k] = .5 * (2 * b + (-a + c) * s + (2 * a - 5 * b + 4 * c - d) * s2 + (-a + 3 * b - 3 * c + d) * s3);
+  }
+  return o;
+}
 const BEAT = () => 60 / CLIP.bpm;
 const beatPos = t => (t - CLIP.beatOffset) / BEAT();
 const beatIdx = t => Math.floor(beatPos(t));

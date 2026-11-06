@@ -63,7 +63,7 @@ function worldState(S, lt, T) {
 }
 
 function drawWorld(ctx, S, lt, T) {
-  setCam(keyAt(S.cam.keys, lt));
+  setCam(S.cam.smooth != null ? splineAt(S.cam.keys, lt, S.cam.smooth) : keyAt(S.cam.keys, lt));   // smooth: плавная кривая через все ключи
   const st = worldState(S, lt, T), L = st.light;
   ctx.save();
   if (CAM.roll) { ctx.translate(W / 2, H / 2); ctx.rotate(CAM.roll * Math.PI / 180); ctx.translate(-W / 2, -H / 2); }

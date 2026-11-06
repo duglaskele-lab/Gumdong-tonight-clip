@@ -3,7 +3,7 @@
 'use strict';
 const CLIP = {
   title: 'Can I Sleep with You Tonight?',
-  ver: 4,   // поднимать, когда картинку заменили под тем же именем (сбрасывает кеш браузера)
+  ver: 5,   // поднимать, когда картинку заменили под тем же именем (сбрасывает кеш браузера)
   audio: 'assets/audio/song.mp3',
   bpm: 143.555, beatOffset: 0.186,          // доля ≈ 0.418 с
   duration: 67.5, fadeOut: 66.0,
