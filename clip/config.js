@@ -26,7 +26,11 @@ const b = k => CLIP.beatOffset + k * 60 / CLIP.bpm;   // время доли №
 
 // Анимации (кадры Seedance, вырезаны tools/whitecut.py): assets/anim/<имя>/fNNN.webp
 // gumdong_play1 — спокойная игра на гитаре, 119 кадров, 24 fps, цикл (движок пока анимации не проигрывает)
-const ANIM_FILES = { gumdong_play1: { dir: 'assets/anim/gumdong_play1', frames: 119, fps: 24, loop: true } };
+// gumdong_sing1 — поёт с поднятой головой и играет (S2), 119 кадров, 24 fps, цикл
+const ANIM_FILES = {
+  gumdong_play1: { dir: 'assets/anim/gumdong_play1', frames: 119, fps: 24, loop: true },
+  gumdong_sing1: { dir: 'assets/anim/gumdong_sing1', frames: 119, fps: 24, loop: true },
+};
 
 const ASSETS = {
   gumdong_guitar: 'assets/sprites/gumdong_guitar.png',
@@ -37,6 +41,8 @@ const ASSETS = {
   gumdong_scared_wide: 'assets/sprites/gumdong_scared_wide.png', gumdong_scared_o: 'assets/sprites/gumdong_scared_o.png',
   gumdong_34_closed: 'assets/sprites/gumdong_34_closed.png', gumdong_34_half: 'assets/sprites/gumdong_34_half.png',
   gumdong_34_wide: 'assets/sprites/gumdong_34_wide.png', gumdong_34_o: 'assets/sprites/gumdong_34_o.png',
+  gumdong_mic: 'assets/sprites/gumdong_mic.png', gumdong_sing_up: 'assets/sprites/gumdong_sing_up.png',
+  gumdong_back_guitar: 'assets/sprites/gumdong_back_guitar.png', gumdong_eyes: 'assets/sprites/gumdong_eyes.png',
   rossali_bass: 'assets/sprites/rossali_bass.png', rossali_front: 'assets/sprites/rossali_front.png', rossali_side: 'assets/sprites/rossali_side.png',
   lupa_front: 'assets/sprites/lupa_front.png', lupa_34: 'assets/sprites/lupa_34.png', lupa_face: 'assets/sprites/lupa_face.png',
   maeve_front: 'assets/sprites/maeve_front.png', alex_front: 'assets/sprites/alex_front.png',
@@ -57,6 +63,10 @@ const CHARACTERS = {
       mouths: ['gumdong_scared_closed', 'gumdong_scared_half', 'gumdong_scared_wide', 'gumdong_scared_o'] },
     q34: { key: 'gumdong_34_half', mouth: { x: .364, y: .46, w: .08 },
       mouths: ['gumdong_34_closed', 'gumdong_34_half', 'gumdong_34_wide', 'gumdong_34_o'] },
+    mic: 'gumdong_mic',                 // по пояс у микрофона с гитарой, поёт (рот открыт)
+    singUp: 'gumdong_sing_up',          // в полный рост, голова вверх, глаза закрыты, поёт
+    backGuitar: 'gumdong_back_guitar',  // со спины с гитарой (отзеркалена: гриф в правой руке — она левша)
+    eyes: 'gumdong_eyes',               // глаза крупно — прямоугольный кадр, не вырезан
   } },
   rossali: { name: 'Rossali — бас', height: 1.74, fallback: 'bass', poses: { bass: 'rossali_bass', front: { key: 'rossali_front', inst: { x: .5, y: .56 } }, side: 'rossali_side' } },
   lupa: { name: 'Lupa — ударные', height: 1.6, fallback: 'front', poses: { front: 'lupa_front', q34: 'lupa_34', face: 'lupa_face' } },

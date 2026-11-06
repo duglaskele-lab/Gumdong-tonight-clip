@@ -42,7 +42,12 @@
 | В полный рост с гитарой | `gumdong_guitar.png` | 956×2000 | ✅ основа для всех новых поз и роликов |
 | Портрет анфас, испуганный, 4 рта | `gumdong_scared_{closed,half,wide,o}.png` | 957×1270 | ✅ рты выровнены — отличается только рот |
 | Портрет 3/4, 4 рта | `gumdong_34_{closed,half,wide,o}.png` | 812×1323 | ✅ рты выровнены (база — «half», остальные рты перенесены на неё) |
+| По пояс у микрофона с гитарой, поёт | `gumdong_mic.png` | 894×1274 | ✅ рот один (открыт) — для липсинка нужны ещё 3 рта |
+| В полный рост, голова вверх, поёт | `gumdong_sing_up.png` | 816×1512 | ✅ |
+| Со спины с гитарой | `gumdong_back_guitar.png` | 724×1249 | ✅ отзеркалена: ChatGPT нарисовал гриф в левой руке |
+| Глаза крупно | `gumdong_eyes.png` | 1280×513 | ✅ прямоугольный кадр без вырезки |
 | Цикл игры на гитаре (S1) | `assets/anim/gumdong_play1/f000–f118.webp` | 535×1050, 24 fps, 119 кадров | ✅ цикл ≈ 4.96 с, последний кадр ≈ первому |
+| Поёт и играет, голова вверх (S2) | `assets/anim/gumdong_sing1/f000–f118.webp` | 647×1120, 24 fps, 119 кадров | ✅ цикл; в середине глаза открываются и становятся карими (ошибка Seedance) — на общем плане почти не видно |
 | Анфас / профиль / спина с листа | `gumdong_front/side/back.png` | ~270×870 | ⚠️ мелкие, без гитары — заменить |
 | Старые портреты с листа | `gumdong_face.png`, `gumdong_face34.png` | ~300×400 | ⚠️ мелкие — заменяются новыми |
 
@@ -57,10 +62,10 @@
 |---|---|---|---|---|
 | 1 | Портрет анфас, испуганный + 4 рта | 03 (0:12–0:21), 07 | *Close-up portrait from chest up, facing camera, worried scared expression, ears slightly back, eyes wide, mouth closed. High resolution.* | ✅ |
 | 2 | Портрет 3/4 + 4 рта | 06 (0:33–0:38), 07 | *Close-up portrait from chest up, three-quarter view, sad tired eyes, mouth closed.* | ✅ |
-| 3 | У микрофона с гитарой, по пояс, поёт | 08 (0:45–0:51) | *Waist-up, standing at a microphone stand, singing into it, eyes half-closed, holding the black Les Paul exactly like the reference (left-handed: neck in her RIGHT hand).* | ⬜ |
-| 4 | Со спины с гитарой, в полный рост | 02 (0:08–0:12, титр) | *Full body from behind, guitar strap over one shoulder, guitar neck visible on the left side, tail visible, head slightly lowered.* | ⬜ |
-| 5 | Поёт, голова поднята, в полный рост | 10 (0:59–1:05) | *Full body, playing guitar, head tilted up, singing with open mouth, eyes closed, same guitar and pose as reference.* | ⬜ |
-| 6 | Глаза крупно (по желанию) | 07, финал | *Extreme close-up of eyes only, red eyes, scared, wide horizontal crop.* | ⬜ |
+| 3 | У микрофона с гитарой, по пояс, поёт | 08 (0:45–0:51) | *Waist-up, standing at a microphone stand, singing into it, eyes half-closed, holding the black Les Paul exactly like the reference (left-handed: neck in her RIGHT hand).* | ✅ |
+| 4 | Со спины с гитарой, в полный рост | 02 (0:08–0:12, титр) | *Full body from behind, guitar strap over one shoulder, she is left-handed so from behind the guitar neck is on the RIGHT side of the image, tail visible, head slightly lowered.* | ✅ (отзеркалена) |
+| 5 | Поёт, голова поднята, в полный рост | 10 (0:59–1:05) | *Full body, playing guitar, head tilted up, singing with open mouth, eyes closed, same guitar and pose as reference.* | ✅ |
+| 6 | Глаза крупно (по желанию) | 07, финал | *Extreme close-up of eyes only, red eyes, scared, wide horizontal crop.* | ✅ |
 
 **Рты для липсинка:** готовый портрет → *«edit this image, change ONLY the mouth, keep everything else identical»* → закрыт / приоткрыт / «А» / «О». Небольшие сдвиги головы не страшны — выравниваются при вырезке (так сделано для портрета 3/4).
 
@@ -73,7 +78,8 @@
 | S1 | Спокойная игра, лёгкое покачивание, цикл | `gumdong_guitar_src.png` | 3–5 с | 09, 01, 05 | ✅ `gumdong_play1` |
 | S1b | **Энергичный риф**, цикл | `gumdong_guitar_src.png` | 4–5 с | 09 (нарастание), 10 | ⬜ |
 | S1c | Гриф вверх, «рок-стойка» (по желанию) | `gumdong_guitar_src.png` | 3 с | 09, удар перед 10 | ⬜ |
-| S2 | Покачивание у микрофона, цикл | спрайт №3 | 2–3 с | 08 | ⬜ |
+| S2 | Поёт и играет, голова вверх, цикл | спрайт №5 | 5 с | 10 (припев), 09 | ✅ `gumdong_sing1` |
+| S2b | Покачивание у микрофона, цикл | спрайт №3 | 2–3 с | 08 | ⬜ |
 | S3 | Поднимает голову к свету | спрайт №5 | 2–3 с | 10, перед блэкаутом 1:03.4 | ⬜ |
 | S4 | Испуганно оглядывается (по желанию) | портрет анфас | 2 с | 03 / 04 | ⬜ |
 
@@ -85,7 +91,7 @@
 **S1c, рок-стойка** —
 > *She steps into a wide power stance and lifts the guitar neck up high, strumming hard with her LEFT hand, head thrown back, hair flying. Then she returns to the starting pose. Feet stay inside the frame. Static camera, plain white background. End in exactly the same pose as the first frame.*
 
-**S2** — *She sways slowly at the microphone, singing softly, eyes half closed. Static camera. End in the same pose as the start.*
+**S2b** — *She sways slowly at the microphone, singing softly, eyes half closed. Static camera. End in the same pose as the start.*
 
 **S3** — *She slowly raises her head toward a light above, eyes close. Static camera, white background.*
 
