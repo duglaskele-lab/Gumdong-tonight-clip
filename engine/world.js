@@ -256,12 +256,17 @@ ENT.drums = (ctx, e, L, lt, T) => {
   ctx.restore();
 };
 // микрофонная стойка
+// микрофонная стойка: e.x — где стоит стойка, e.h — высота микрофона; e.boom — штанга вбок (м, + вправо), на её конце микрофон
 ENT.mic = (ctx, e, L) => {
-  const a = proj(e.x, ROOM.stH, e.z), b = proj(e.x, ROOM.stH + (e.h || 1.5), e.z); if (!a || !b) return;
-  const k = .3 + L.stage * .7; ctx.save(); ctx.strokeStyle = shadeHex('#4a4448', k); ctx.lineWidth = Math.max(1.5, .018 * a[2]);
-  ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); ctx.stroke();
+  const bm = e.boom || 0, top = ROOM.stH + (e.h || 1.5) - (bm ? .05 : 0);
+  const a = proj(e.x, ROOM.stH, e.z), b = proj(e.x, top, e.z), m = proj(e.x + bm, ROOM.stH + (e.h || 1.5), e.z); if (!a || !b || !m) return;
+  const k = .3 + L.stage * .7; ctx.save(); ctx.strokeStyle = shadeHex('#4a4448', k); ctx.lineWidth = Math.max(1.5, .018 * a[2]); ctx.lineCap = 'round';
+  ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); if (bm) ctx.lineTo(m[0], m[1]); ctx.stroke();
   ctx.beginPath(); ctx.moveTo(a[0] - .18 * a[2], a[1]); ctx.lineTo(a[0], a[1] - .12 * a[2]); ctx.lineTo(a[0] + .18 * a[2], a[1]); ctx.stroke();
-  ctx.fillStyle = shadeHex('#222', k + .3); ctx.beginPath(); ctx.ellipse(b[0], b[1] - .04 * b[2], .03 * b[2], .055 * b[2], -.3, 0, Math.PI * 2); ctx.fill(); ctx.restore();
+  const ang = bm ? Math.atan2(m[1] - b[1], m[0] - b[0]) : -Math.PI / 2 - .3;   // микрофон смотрит по направлению штанги
+  ctx.fillStyle = shadeHex('#222', k + .3); ctx.beginPath(); ctx.ellipse(m[0] + Math.cos(ang) * .03 * m[2], m[1] + Math.sin(ang) * .03 * m[2], .055 * m[2], .03 * m[2], ang, 0, Math.PI * 2); ctx.fill();
+  ctx.fillStyle = shadeHex('#8a8a90', k + .2); ctx.beginPath(); ctx.ellipse(m[0] + Math.cos(ang) * .075 * m[2], m[1] + Math.sin(ang) * .075 * m[2], .022 * m[2], .03 * m[2], ang, 0, Math.PI * 2); ctx.fill();   // сетка
+  ctx.restore();
 };
 // усилитель
 ENT.amp = (ctx, e, L) => {

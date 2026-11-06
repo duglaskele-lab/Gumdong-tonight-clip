@@ -113,7 +113,7 @@ const SET = {
     { id: 'kit', type: 'drums', x: 2.4, z: 15.3 },
     { id: 'lupa', type: 'char', char: 'lupa', pose: 'front', x: 2.4, y: .7, z: 15.75, seat: .62, seatY: .58, zone: 'stage', anim: ['headbang'] },
     { id: 'rossali', type: 'char', char: 'rossali', pose: 'bass', x: -2.5, y: .7, z: 14.2, zone: 'stage', anim: [['bob', 1], ['sway', .5]], phase: .2 },
-    { id: 'mic', type: 'mic', x: .09, z: 12.95, h: 1.36 },   // у рта; в сцене 08 спрятан — стойка в спрайте у микрофона
+    { id: 'mic', type: 'mic', x: -.2, boom: .12, z: 12.95, h: 1.27 },   // стойка слева от неё (как в спрайтах у микрофона), штанга к губам; в сценах 08, 11 спрятана — стойка в спрайте
     { id: 'gumdong', type: 'char', char: 'gumdong', pose: 'play', x: 0, y: .7, z: 13.3, zone: 'stage', mouth: true },   // поза play — анимация, своё движение не нужно
     // зал: столики и зрители (тени — заглушки до листов зрителей)
     { id: 't1', type: 'table', x: -3.6, z: 9.4 }, { id: 'maeve', type: 'char', char: 'maeve', pose: 'front', x: -3.5, z: 9.85, seat: .5, seatY: .42, zone: 'house', eyeY: .92 },
