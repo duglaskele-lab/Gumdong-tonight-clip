@@ -115,7 +115,7 @@ for (const s of ['engine/core.js', 'engine/world.js', 'engine/layers.js', 'asset
   function exportTimings() { $('expTxt').value = 'const LYRICS = [\n' + LYRICS.map(l => `  { t: ${l.t.toFixed(2)}${l.end ? `, end: ${l.end.toFixed(2)}` : ''}, text: ${JSON.stringify(l.text)} },`).join('\n') + '\n];'; $('exp').classList.add('open'); }
 
   // ---------- кнопки и клавиши ----------
-  $('start').onclick = play; $('play').onclick = toggle;
+  $('play').onclick = toggle;   // кнопка ▶ на кадре включается, когда загрузятся картинки
   $('bSync').onclick = toggleSync; $('sExport').onclick = exportTimings;
   $('expClose').onclick = () => $('exp').classList.remove('open');
   $('expCopy').onclick = () => { $('expTxt').select(); navigator.clipboard?.writeText($('expTxt').value).catch(() => document.execCommand('copy')); };
@@ -147,11 +147,17 @@ for (const s of ['engine/core.js', 'engine/world.js', 'engine/layers.js', 'asset
     if (!playing) t = T;
     renderAt(t, ctx); if (audioOK) aud.volume = clamp(audioGain(t), 0, 1);
     $('time').textContent = fmt(t) + ' / ' + fmt(CLIP.duration).slice(0, 5);
-    const S = sceneAt(t); $('scene').textContent = S ? S.id : '';
+    const S = sceneAt(t); $('scene').textContent = (S ? S.id : '') + (E.load.done < E.load.total ? ` · анимации ${Math.round(E.load.done / E.load.total * 100)}%` : '');
     if (document.body.classList.contains('debug')) { const L = lyricAt(t); $('dbg').innerHTML = `${fmt(t)} · доля ${beatIdx(t)}<br>сцена ${S ? S.id : '-'} · ${S ? (t - S.start).toFixed(2) : '-'} с от начала<br>строка ${L ? '#' + (L.i + 1) : '-'}`; }
     drawTL(); requestAnimationFrame(frame);
   }
-  loadAll().then(() => {
+  // прогресс загрузки на кнопке старта
+  const sBtn = $('start').querySelector('div'); sBtn.textContent = 'Загрузка…';
+  const prog = setInterval(() => { if (E.load.total) sBtn.textContent = 'Загрузка ' + Math.round(E.load.done / E.load.total * 100) + '%'; }, 150);
+  // кеш в браузере (service worker): картинки, кадры анимаций, песня, шрифты — со второго открытия грузятся с диска
+  if ('serviceWorker' in navigator && !q.has('render') && (location.protocol === 'https:' || location.hostname === 'localhost')) navigator.serviceWorker.register('sw.js').catch(() => {});
+  loadAll(q.has('render')).then(() => {
+    clearInterval(prog); sBtn.textContent = '▶ Play clip'; $('start').onclick = play;
     if (q.has('notes') && q.get('notes') === '0') { E.notes = false; $('bNotes').classList.remove('on'); }
     if (q.has('render')) { E.notes = false; T = parseT(q.get('t')); $('start').style.display = 'none'; document.body.classList.add('hideui'); renderAt(T, ctx); window.__ready = true; return; }
     if (q.has('t')) { seek(parseT(q.get('t'))); $('start').querySelector('div').textContent = '▶ Play from ' + fmt(T); }

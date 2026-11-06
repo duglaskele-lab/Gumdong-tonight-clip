@@ -86,25 +86,52 @@ function mouthAt(P, T, o) {
 function poseImg(P, T, o = {}) {
   const i = animIdx(P, T, o);
   if (i >= 0) return E.anim[P.anim][i] || E.img[P.key];
+  if (P.anim && E.anim && !E.anim[P.anim] && typeof ANIM_FILES !== 'undefined' && ANIM_FILES[P.anim]) loadAnim(P.anim);   // на всякий случай: догрузить по требованию
   if (o.mouth && P.mouths) return E.img[P.mouths[mouthIdx(T)]] || E.img[P.key];
   return E.img[P.key];
 }
 
 // ---------- loading ----------
 const loadScript = src => new Promise((ok, no) => { const s = document.createElement('script'); s.src = src + (window.__V ? '?v=' + window.__V : ''); s.charset = 'utf-8'; s.onload = ok; s.onerror = () => no(src); document.head.appendChild(s); });
-const loadImg = src => new Promise(ok => { const im = new Image(); im.onload = () => ok(im); im.onerror = () => { console.warn('missing', src); ok(null); }; im.src = (window.__A && __A[src]) || (src + (typeof CLIP !== 'undefined' && CLIP.ver ? '?v=' + CLIP.ver : '')); });
-async function loadAll() {
+const verQ = () => (typeof CLIP !== 'undefined' && CLIP.ver ? '?v=' + CLIP.ver : '');
+const loadImg1 = src => new Promise(ok => { const im = new Image(); im.onload = () => ok(im); im.onerror = () => ok(null); im.src = (window.__A && __A[src]) || (src + verQ()); });
+// Спрайты assets/sprites/X.png грузятся сжатыми из assets/sprites/web/X.webp (tools/webify.py); нет webp — берётся PNG.
+async function loadImg(src) {
+  const m = !(window.__A && __A[src]) && /^assets\/sprites\/([^/]+)\.png$/.exec(src);
+  const im = (m && await loadImg1(`assets/sprites/web/${m[1]}.webp`)) || await loadImg1(src);
+  if (!im) console.warn('missing', src); return im;
+}
+E.load = { done: 0, total: 0 };
+const track = p => { E.load.total++; return p.then(v => { E.load.done++; return v; }); };
+// Какие анимации реально стоят в сценах (неиспользуемые не грузим): позы в SET.ents, set.ents и слоях сцен.
+function usedAnims() {
+  const out = [], add = (ch, pose) => { const C = CHARACTERS[ch]; const P = C && C.poses[pose]; if (P && P.anim && !out.includes(P.anim)) out.push(P.anim); };
+  for (const S of SCENES) {
+    const set = S.set || {}, ov = typeof set.ents === 'object' ? set.ents : {};
+    for (const e of SET.ents) if (e.type === 'char' && S.world) { let o = ov[e.id]; if (typeof o === 'function') o = o(0, S.start); add(e.char, (o && o.pose) || e.pose); }
+    const walk = L => { if (!L) return; if (L.char) add(L.char, L.pose); (L.items || []).forEach(walk); };
+    (S.layers || []).forEach(walk); (S.overlay || []).forEach(walk);
+  }
+  return out;
+}
+// Покадровые анимации (Seedance): ANIM_FILES[name] = {dir, frames, fps, loop} → E.anim[name] = [Image…].
+// Массив создаётся сразу; пока кадр не пришёл, рисуется статичный спрайт позы.
+function loadAnim(k) {
+  const a = ANIM_FILES[k]; if (!a || E.anim[k]) return Promise.resolve();
+  const fr = E.anim[k] = new Array(a.frames).fill(null);
+  return Promise.all(fr.map((_, i) => track(loadImg1(`${a.dir}/f${String(i).padStart(3, '0')}.${a.ext || 'webp'}`).then(im => { fr[i] = im; }))));
+}
+// waitAnims: true — ждать все кадры (рендер видео, проверка кадров); иначе плеер стартует сразу, анимации догружаются в фоне.
+async function loadAll(waitAnims = true) {
   for (const n of CLIP.scenes) { try { await loadScript('clip/scenes/' + n + '.js'); } catch (e) { console.error('scene file failed', e); } }
   SCENES.sort((a, b) => a.start - b.start);
-  await Promise.all(Object.entries(ASSETS).map(async ([k, p]) => { E.img[k] = await loadImg(p); }));
-  // покадровые анимации (Seedance): ANIM_FILES[name] = {dir, frames, fps, loop} → E.anim[name] = [Image…]
   E.anim = {};
-  const AF = typeof ANIM_FILES !== 'undefined' ? ANIM_FILES : {};
-  await Promise.all(Object.entries(AF).map(async ([k, a]) => {
-    E.anim[k] = await Promise.all(Array.from({ length: a.frames }, (_, i) => loadImg(`${a.dir}/f${String(i).padStart(3, '0')}.${a.ext || 'webp'}`)));
-  }));
+  await Promise.all(Object.entries(ASSETS).map(([k, p]) => track(loadImg(p)).then(im => { E.img[k] = im; })));
   try { await Promise.all(CLIP.fonts.map(f => document.fonts.load(f))); } catch (e) {}
   E.buf = document.createElement('canvas'); E.buf.width = W; E.buf.height = H; E.bctx = E.buf.getContext('2d');
+  const anims = typeof ANIM_FILES !== 'undefined' ? usedAnims() : [];
+  if (waitAnims) await Promise.all(anims.map(loadAnim));
+  else (async () => { for (const k of anims) await loadAnim(k); })();   // по очереди, в порядке появления в клипе
   E.ready = true;
 }
 
