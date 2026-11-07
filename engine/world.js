@@ -176,7 +176,9 @@ ENT.char = (ctx, e, L, lt, T, S) => {
   // P.part — спрайт «по пояс»: картинка покрывает верхнюю долю part роста, низ картинки висит на высоте (1-part)·рост
   const hm = (e.h || C.height) * (P.scale || 1), part = P.part || 1;
   const p = proj(e.x + (P.dx || 0), (e.y || 0) + (e.seat ? (e.seatY ?? .45) : hm * (1 - part)), e.z); if (!p) return;
-  const fullH = hm * p[2];
+  // масштаб — по глубине середины тела, а не ступней: при наклонённой камере (сцена 02) персонаж не «уезжает»
+  const pc = e.seat ? p : proj(e.x + (P.dx || 0), (e.y || 0) + hm * (1 - part / 2), e.z);
+  const fullH = hm * (pc ? pc[2] : p[2]);
   const crop = e.seat ? [0, 0, 1, e.seat] : (P.crop || null);
   const hh = fullH * (crop ? crop[3] : 1) * part, ww = hh * (im.width * (crop ? crop[2] : 1)) / (im.height * (crop ? crop[3] : 1));
   const an = animOf(e.anim, T + (e.phase || 0));

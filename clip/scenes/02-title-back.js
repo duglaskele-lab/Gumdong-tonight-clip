@@ -1,10 +1,20 @@
-/* 02 · Со спины вокалистки: перед ней зал в огоньках свечей, титр с названием. */
+/* 02 · Обратный кадр: камера на сцене за спиной Gumdong, «через плечо» смотрит в настоящий зал клуба —
+   столики со свечами, Maeve, тени зрителей. Камера медленно поднимается из-за плеча, открывается зал.
+   (В 01 мы шли из зала к сцене, здесь — со сцены в зал.) */
+{ // блок: константы сцены не видны другим файлам
+const D2 = b(32) - b(19);
 scene({
-  id: '02 title back', start: b(19), end: b(32), lyrics: 'none',
-  layers: [
-    { type: 'bg', style: 'bokeh', drift: -12 },
-    { type: 'sprite', char: 'gumdong', pose: 'backGuitar', x: W * .52, y: H + 330, anchor: 'bottom', shade: .6, rim: { color: '#c040ff', amount: .55, depth: .3 },
-      keys: [{ t: 0, h: 1500 }, { t: b(32) - b(19), h: 1640, e: 'linear' }] },
-  ],
-  overlay: [{ type: 'note', text: '02 · со спины с гитарой' }],
+  id: '02 over shoulder', start: b(19), end: b(32), world: true, lyrics: 'none',
+  cam: { smooth: .7, keys: [
+    { t: 0, x: -.36, y: 1.92, z: 14.3, yaw: 187, pitch: 1, fov: 50 },           // низко из-за плеча, близко к спине
+    { t: D2 * .5, x: -.33, y: 2.2, z: 14.45, yaw: 184, pitch: -3, fov: 52 },
+    { t: D2, x: -.3, y: 2.55, z: 14.55, yaw: 182, pitch: -8, fov: 54 },        // поднялись над плечом, смотрим вниз в зал (pitch − = вниз): голова целиком, зал открыт
+  ] },
+  set: {
+    hide: ['rossali', 'lupa'],                     // они рядом/позади камеры, спрайты нарисованы лицом к зрителю
+    ents: { gumdong: { pose: 'backGuitar', mouth: false } },
+    light: { house: .38, stage: .5, candles: 1, beams: .55, rim: .5, rimColor: '#c040ff', string: .8 },
+  },
+  overlay: [{ type: 'note', text: '02 · со сцены в зал, через плечо Gumdong' }],
 });
+}
