@@ -177,9 +177,10 @@ ENT.char = (ctx, e, L, lt, T, S) => {
   // (картинка смотрит вправо; для другой стороны — зеркало). Нет нужного вида — берётся ближайший имеющийся.
   let P = P0, viewFlip = false;
   if (P0.back || P0.side) {
-    const a = toCam(e.x, 1, e.z), f = toCam(e.x, 1, e.z + 1), dz = f[2] - a[2];
+    const fc = e.face || [0, 1];   // куда смотрит зритель в плане (x, z); по умолчанию — на сцену (+z)
+    const a = toCam(e.x, 1, e.z), f = toCam(e.x + fc[0], 1, e.z + fc[1]), dz = f[2] - a[2];
     // сторона профиля — по экрану: куда уходит на картинке точка «на метр к сцене» (с учётом перспективы)
-    const pa = proj(e.x, 1, e.z), pf = proj(e.x, 1, e.z + .3), dx = pa && pf ? pf[0] - pa[0] : f[0] - a[0];
+    const pa = proj(e.x, 1, e.z), pf = proj(e.x + fc[0] * .3, 1, e.z + fc[1] * .3), dx = pa && pf ? pf[0] - pa[0] : f[0] - a[0];
     const ang = Math.abs(Math.atan2(f[0] - a[0], -dz)) * 180 / Math.PI;   // в метрах камеры: 0 — смотрит на камеру, 180 — спиной
     let view = ang < 50 ? 'front' : ang > 130 ? 'back' : 'side';
     const has = v => v === 'front' ? !P0.frontMissing : !!(P0[v] && E.img[P0[v]]);
