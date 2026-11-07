@@ -171,6 +171,16 @@ function drawEnt(ctx, e, L, lt, T, S) {
 const ENT = {};
 
 // персонаж-спрайт. e: {char, pose, x,y,z, h? (м), seat (доля сверху, если сидит), seatY, flip, anim, inst:'guitar'|'bass', mouth:true}
+// Где на экране стоит персонаж (при текущей камере CAM): картинка, центр по x, низ, ширина, высота.
+// Упрощённо (без видов зрителя и сидения) — для артистов на сцене; нужно, чтобы «передать» фигуру в 2D-слой.
+function entRect(e, T) {
+  const C = CHARACTERS[e.char], P = poseOf(e.char, e.pose), im = poseImg(P, T, e); if (!im) return null;
+  const hm = (e.h || C.height) * (P.scale || 1), part = P.part || 1;
+  const p = proj(e.x + (P.dx || 0), (e.y || 0) + hm * (1 - part), e.z); if (!p) return null;
+  const pc = proj(e.x + (P.dx || 0), (e.y || 0) + hm * (1 - part / 2), e.z);
+  const hh = hm * (pc ? pc[2] : p[2]) * part;
+  return { im, cx: p[0], yb: p[1], w: hh * im.width / im.height, h: hh };
+}
 ENT.char = (ctx, e, L, lt, T, S) => {
   const C = CHARACTERS[e.char], P0 = poseOf(e.char, e.pose);
   // Вид по направлению камеры (для зрителей, сидящих лицом к сцене, +z): front — P.key, back — P.back, side — P.side
