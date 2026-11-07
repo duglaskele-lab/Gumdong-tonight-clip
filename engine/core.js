@@ -93,8 +93,10 @@ function poseImg(P, T, o = {}) {
 
 // ---------- loading ----------
 const loadScript = src => new Promise((ok, no) => { const s = document.createElement('script'); s.src = src + (window.__V ? '?v=' + window.__V : ''); s.charset = 'utf-8'; s.onload = ok; s.onerror = () => no(src); document.head.appendChild(s); });
-const verQ = () => (typeof CLIP !== 'undefined' && CLIP.ver ? '?v=' + CLIP.ver : '');
-const loadImg1 = src => new Promise(ok => { const im = new Image(); im.onload = () => ok(im); im.onerror = () => ok(null); im.src = (window.__A && __A[src]) || (src + verQ()); });
+// версия файла для кеша: хеш содержимого из assets/data/manifest.js (tools/manifest.py) — после замены
+// одного спрайта меняется только его адрес, остальное браузер берёт из кеша; нет в манифесте — CLIP.ver
+const verQ = src => { const h = window.ASSET_V && ASSET_V[src]; return h ? '?v=' + h : (typeof CLIP !== 'undefined' && CLIP.ver ? '?v=' + CLIP.ver : ''); };
+const loadImg1 = src => new Promise(ok => { const im = new Image(); im.onload = () => ok(im); im.onerror = () => ok(null); im.src = (window.__A && __A[src]) || (src + verQ(src)); });
 // Спрайты assets/sprites/X.png грузятся сжатыми из assets/sprites/web/X.webp (tools/webify.py); нет webp — берётся PNG.
 async function loadImg(src) {
   const m = !(window.__A && __A[src]) && /^assets\/sprites\/([^/]+)\.png$/.exec(src);

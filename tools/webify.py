@@ -17,3 +17,4 @@ for f in sorted(glob.glob('assets/sprites/*.png')):
     Image.open(f).save(out, 'webp', quality=92, method=6); n += 1
     print(out, os.path.getsize(f) // 1024, '→', os.path.getsize(out) // 1024, 'KB')
 print('обновлено:', n)
+os.system('python3 tools/manifest.py')   # версии файлов для кеша браузера

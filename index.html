@@ -90,14 +90,20 @@ body.recording #rec{display:flex}
 
 <script>/* скрипты всегда свежие: GitHub Pages кеширует файлы на 10 минут */
 window.__V = Date.now();
-for (const s of ['engine/core.js', 'engine/world.js', 'engine/layers.js', 'engine/recorder.js', 'assets/data/vox_env.js', 'assets/data/anim_track.js', 'clip/config.js'])
+for (const s of ['engine/core.js', 'engine/world.js', 'engine/layers.js', 'engine/recorder.js', 'assets/data/vox_env.js', 'assets/data/anim_track.js', 'assets/data/manifest.js', 'clip/config.js'])
   document.write('<script src="' + s + '?v=' + __V + '" charset="utf-8"><\/script>');
 </script>
 <script>
 (() => {
   const $ = id => document.getElementById(id);
   const cv = $('c'), ctx = cv.getContext('2d'); E.ctx = ctx;
-  const aud = $('aud'); aud.src = (window.__A && __A[CLIP.audio]) || CLIP.audio;
+  const aud = $('aud');
+  // песня: целиком через fetch (её кеширует sw.js, как картинки) → blob; без service worker — обычная загрузка
+  if (window.__A && __A[CLIP.audio]) aud.src = __A[CLIP.audio];
+  else fetch(CLIP.audio + verQ(CLIP.audio)).then(r => { if (!r.ok) throw 0; return r.blob(); })
+    .then(bl => { aud.src = URL.createObjectURL(bl); audioOK = true;   // песня пришла: если уже играем — подхватить с текущего места
+      if (playing) { aud.currentTime = (performance.now() - clock0) / 1000; aud.play().catch(() => {}); } else { try { aud.currentTime = T; } catch (e) {} } })
+    .catch(() => { aud.src = CLIP.audio; });
   const q = new URLSearchParams(location.search);
   let T = 0, playing = false, clock0 = 0, audioOK = true;
   aud.addEventListener('error', () => { audioOK = false; });
