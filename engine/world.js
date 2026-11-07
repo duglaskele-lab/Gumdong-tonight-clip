@@ -172,7 +172,10 @@ const ENT = {};
 
 // персонаж-спрайт. e: {char, pose, x,y,z, h? (м), seat (доля сверху, если сидит), seatY, flip, anim, inst:'guitar'|'bass', mouth:true}
 ENT.char = (ctx, e, L, lt, T, S) => {
-  const C = CHARACTERS[e.char], P = poseOf(e.char, e.pose); const im = poseImg(P, T, e); if (!im) return;
+  const C = CHARACTERS[e.char], P0 = poseOf(e.char, e.pose);
+  // зрители смотрят на сцену (+z): если камера у них за спиной и есть вид сзади (P.back) — рисуем его
+  const P = (P0.back && E.img[P0.back] && CAM.z < e.z) ? Object.assign({}, P0, { key: P0.back, anim: null, mouth: null }) : P0;
+  const im = poseImg(P, T, e); if (!im) return;
   // P.part — спрайт «по пояс»: картинка покрывает верхнюю долю part роста, низ картинки висит на высоте (1-part)·рост
   const hm = (e.h || C.height) * (P.scale || 1), part = P.part || 1;
   const p = proj(e.x + (P.dx || 0), (e.y || 0) + (e.seat ? (e.seatY ?? .45) : hm * (1 - part)), e.z); if (!p) return;
