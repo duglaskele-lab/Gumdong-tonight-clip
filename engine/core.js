@@ -226,7 +226,7 @@ function renderAt(T, outCtx) {
     for (const L of S.overlay || []) drawLayer(ctx, L, S, lt, T);
   }
   postFX(ctx, S, T);
-  if (S && S.lyrics !== 'none') drawCaption(ctx, T, S);
+  if (S && S.lyrics !== 'none' && E.captions !== false) drawCaption(ctx, T, S);
   sceneFX(ctx, S, T);
   outCtx.setTransform(1, 0, 0, 1, 0, 0); outCtx.drawImage(E.buf, 0, 0);
 }
