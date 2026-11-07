@@ -173,8 +173,20 @@ const ENT = {};
 // персонаж-спрайт. e: {char, pose, x,y,z, h? (м), seat (доля сверху, если сидит), seatY, flip, anim, inst:'guitar'|'bass', mouth:true}
 ENT.char = (ctx, e, L, lt, T, S) => {
   const C = CHARACTERS[e.char], P0 = poseOf(e.char, e.pose);
-  // зрители смотрят на сцену (+z): если камера у них за спиной и есть вид сзади (P.back) — рисуем его
-  const P = (P0.back && E.img[P0.back] && CAM.z < e.z) ? Object.assign({}, P0, { key: P0.back, anim: null, mouth: null, scale: (P0.scale || 1) * (P0.backScale || 1) }) : P0;
+  // Вид по направлению камеры (для зрителей, сидящих лицом к сцене, +z): front — P.key, back — P.back, side — P.side
+  // (картинка смотрит вправо; для другой стороны — зеркало). Нет нужного вида — берётся ближайший имеющийся.
+  let P = P0, viewFlip = false;
+  if (P0.back || P0.side) {
+    const a = toCam(e.x, 1, e.z), f = toCam(e.x, 1, e.z + 1), dz = f[2] - a[2];
+    // сторона профиля — по экрану: куда уходит на картинке точка «на метр к сцене» (с учётом перспективы)
+    const pa = proj(e.x, 1, e.z), pf = proj(e.x, 1, e.z + .3), dx = pa && pf ? pf[0] - pa[0] : f[0] - a[0];
+    const ang = Math.abs(Math.atan2(f[0] - a[0], -dz)) * 180 / Math.PI;   // в метрах камеры: 0 — смотрит на камеру, 180 — спиной
+    let view = ang < 50 ? 'front' : ang > 130 ? 'back' : 'side';
+    const has = v => v === 'front' ? !P0.frontMissing : !!(P0[v] && E.img[P0[v]]);
+    if (!has(view)) view = has('side') ? 'side' : (dz > 0 && has('back') ? 'back' : 'front');
+    if (view === 'back') P = Object.assign({}, P0, { key: P0.back, anim: null, mouth: null, scale: (P0.scale || 1) * (P0.backScale || 1) });
+    if (view === 'side') { P = Object.assign({}, P0, { key: P0.side, anim: null, mouth: null, scale: (P0.scale || 1) * (P0.sideScale || 1) }); viewFlip = dx < 0; }
+  }
   const im = poseImg(P, T, e); if (!im) return;
   // P.part — спрайт «по пояс»: картинка покрывает верхнюю долю part роста, низ картинки висит на высоте (1-part)·рост
   const hm = (e.h || C.height) * (P.scale || 1), part = P.part || 1;
@@ -187,7 +199,7 @@ ENT.char = (ctx, e, L, lt, T, S) => {
   const an = animOf(e.anim, T + (e.phase || 0));
   const light = entLight(e, L);
   ctx.save(); ctx.translate(p[0] + an.dx * fullH, p[1] + an.dy * fullH); ctx.rotate(an.r); ctx.scale(1, an.sy);
-  const o = { crop, flip: e.flip, shade: (1 - light) * .88, shadeColor: e.zone === 'stage' ? '#12040a' : '#07040a',
+  const o = { crop, flip: e.flip !== viewFlip, shade: (1 - light) * .88, shadeColor: e.zone === 'stage' ? '#12040a' : '#07040a',
     sil: e.sil, silColor: e.silColor, alpha: e.alpha, glow: e.glow };   // sil 0..1 — заливка цветом silColor (силуэт), glow — свечение
   if (e.zone === 'stage' && L.rim) o.rim = { color: L.rimColor || '#ff2a55', amount: L.rim * (1 - light * .5), depth: .25 };
   drawImg(ctx, im, -ww / 2, -hh, ww, hh, o);

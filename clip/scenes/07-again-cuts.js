@@ -7,7 +7,7 @@ const shots = [
   { char: 'rossali', pose: 'portrait', h: 1150, x: W * .4, y: H + 120 },
   { char: 'lupa', pose: 'portrait', h: 1000, x: W * .62, y: H + 60 },
   { char: 'maeve', pose: 'front', crop: [0, 0, 1, .36], h: 1000, x: W * .32 },
-  { char: 'alex', pose: 'front', crop: [0, 0, 1, .34], h: 1000, x: W * .68 },
+  { char: 'alex', pose: 'v', h: 1000, x: W * .64, y: H + 60 },   // крупный план со знаком V
   { char: 'gumdong', pose: 'scared', h: 1040, x: W * .5, mouth: true },   // поёт «again» — в середине сцены
   { char: 'rossali', pose: 'portrait', h: 1150, x: W * .6, y: H + 120 },
   { char: 'lupa', pose: 'portrait', h: 1000, x: W * .38, y: H + 60 },
