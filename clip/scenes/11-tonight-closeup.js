@@ -26,8 +26,9 @@ scene({
         const s = sm((lt - OFF) / SIL);
         o.gumdong = Object.assign({}, o.gumdong, WHITE, { sil: s, alpha: 1 - sm((lt - SWAP) / SWD) });   // в белый, затем передаёт место силуэту в полный рост
         const a = sm((lt - OFF - .5) / 1.1) * .8;
-        o.lupa = Object.assign({ sil: 1, alpha: a }, WHITE);
-        o.rossali = Object.assign({ sil: 1, alpha: a }, WHITE);
+        // замирают на кадре момента блэкаута (как Gumdong) — стоп-кадр: animSpeed 0, кадр = время блэкаута (+ их сдвиг цикла)
+        o.lupa = Object.assign({ sil: 1, alpha: a, animSpeed: 0, animOffset: 65.8 }, WHITE);
+        o.rossali = Object.assign({ sil: 1, alpha: a, animSpeed: 0, animOffset: 65.8 + 1.7 }, WHITE);
       }
       return o;
     },

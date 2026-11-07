@@ -75,7 +75,7 @@ function mouthIdx(t) {
 function animIdx(P, T, o = {}) {
   const fr = E.anim && E.anim[P.anim]; if (!P.anim || !fr || !fr.length) return -1;
   const a = ANIM_FILES[P.anim], n = fr.length;
-  const i = Math.floor((T * (o.animSpeed || P.animSpeed || 1) + (o.animOffset ?? P.animOffset ?? 0)) * a.fps);
+  const i = Math.floor((T * (o.animSpeed ?? P.animSpeed ?? 1) + (o.animOffset ?? P.animOffset ?? 0)) * a.fps);   // animSpeed: 0 — стоп-кадр
   return a.loop === false ? clamp(i, 0, n - 1) : ((i % n) + n) % n;
 }
 // Где рот в момент T: у анимации с дорожкой ANIM_TRACK (assets/data/anim_track.js) — по кадру, иначе P.mouth.
