@@ -3,7 +3,7 @@
 'use strict';
 const CLIP = {
   title: 'Can I Sleep with You Tonight?',
-  ver: 9,   // поднимать, когда картинку заменили под тем же именем (сбрасывает кеш браузера)
+  ver: 10,   // поднимать, когда картинку заменили под тем же именем (сбрасывает кеш браузера)
   audio: 'assets/audio/song_clip.mp3',   // первые 1:15 песни (быстрее грузится); полная — assets/audio/song.mp3
   bpm: 143.555, beatOffset: 0.186,          // доля ≈ 0.418 с
   duration: 71.0, fadeOut: 69.4,          // fadeOut — картинка уходит в чёрное к концу
@@ -36,6 +36,10 @@ const ANIM_FILES = {
   // gumdong_mic_up — у микрофона поднимает голову к свету (S3), 121 кадр, без цикла (держит последний кадр);
   // кадры в той же рамке, что спрайт gumdong_mic → переход со статики незаметен
   gumdong_mic_up: { dir: 'assets/anim/gumdong_mic_up', frames: 121, fps: 24, loop: false },
+  // lupa_play1 — Lupa играет на барабанах (L2), кадры в рамке спрайта lupa_kit, уменьшены до 0.6; цикл
+  lupa_play1: { dir: 'assets/anim/lupa_play1', frames: 121, fps: 24, loop: true },
+  // rossali_play1 — Rossali играет на басе (R2), уменьшены до 0.75; цикл
+  rossali_play1: { dir: 'assets/anim/rossali_play1', frames: 121, fps: 24, loop: true },
 };
 
 const ASSETS = {
@@ -82,10 +86,10 @@ const CHARACTERS = {
     backGuitar: 'gumdong_back_guitar',  // со спины с гитарой (отзеркалена: гриф в правой руке — она левша)
     eyes: 'gumdong_eyes',               // глаза крупно — прямоугольный кадр, не вырезан
   } },
-  rossali: { name: 'Rossali — бас', height: 1.74, fallback: 'bass', poses: { bass: 'rossali_bass', portrait: 'rossali_portrait',   // portrait — по грудь, с сигаретой (только крупные планы)
+  rossali: { name: 'Rossali — бас', height: 1.74, fallback: 'bass', poses: { bass: 'rossali_bass', portrait: 'rossali_portrait', play: { key: 'rossali_bass', anim: 'rossali_play1' },   // portrait — по грудь, с сигаретой (только крупные планы)
      front: { key: 'rossali_front', inst: { x: .5, y: .56 } }, side: 'rossali_side' } },
   lupa: { name: 'Lupa — ударные', height: 1.6, fallback: 'front', poses: { front: 'lupa_front', q34: 'lupa_34', face: 'lupa_face', portrait: 'lupa_portrait',
-    kit: { key: 'lupa_kit', scale: .86 } } },   // kit — за своей установкой (установка в картинке; рост картинки ≈ 1.37 м по бочке 22")
+    kit: { key: 'lupa_kit', scale: .903, anim: 'lupa_play1' } } },   // scale: картинка выросла сверху под поднятые палочки   // kit — за своей установкой (установка в картинке; рост картинки ≈ 1.37 м по бочке 22")
   maeve: { name: 'Maeve (зритель)', height: 1.88, fallback: 'front', poses: { front: 'maeve_front' } },
   alex: { name: 'Alex (танцует у сцены)', height: 1.75, fallback: 'front', poses: { front: 'alex_front' } },
 };
@@ -115,7 +119,7 @@ const SET = {
     { id: 'amp_l', type: 'amp', x: -4.1, z: 16.4 }, { id: 'amp_r', type: 'amp', x: 4.0, z: 16.2, w: 1.0, h: 1.3 },
     // установка кодом ({ type: 'drums' }) больше не нужна: она нарисована в спрайте lupa_kit
     { id: 'lupa', type: 'char', char: 'lupa', pose: 'kit', x: 2.4, y: .7, z: 15.35, zone: 'stage' },   // Lupa вместе с установкой (картинка); установка кодом — kit, спрятана
-    { id: 'rossali', type: 'char', char: 'rossali', pose: 'bass', x: -2.5, y: .7, z: 14.2, zone: 'stage', anim: [['bob', 1], ['sway', .5]], phase: .2 },
+    { id: 'rossali', type: 'char', char: 'rossali', pose: 'play', x: -2.5, y: .7, z: 14.2, zone: 'stage', animOffset: 1.7 },   // R2; сдвиг цикла, чтобы не совпадал с Lupa
     { id: 'mic', type: 'mic', x: -.2, boom: .12, z: 12.95, h: 1.27 },   // стойка слева от неё (как в спрайтах у микрофона), штанга к губам; в сценах 08, 11 спрятана — стойка в спрайте
     { id: 'gumdong', type: 'char', char: 'gumdong', pose: 'play', x: 0, y: .7, z: 13.3, zone: 'stage', mouth: true },   // поза play — анимация, своё движение не нужно
     // зал: столики и зрители (тени — заглушки до листов зрителей)
