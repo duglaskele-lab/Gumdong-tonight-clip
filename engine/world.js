@@ -174,7 +174,7 @@ const ENT = {};
 ENT.char = (ctx, e, L, lt, T, S) => {
   const C = CHARACTERS[e.char], P0 = poseOf(e.char, e.pose);
   // зрители смотрят на сцену (+z): если камера у них за спиной и есть вид сзади (P.back) — рисуем его
-  const P = (P0.back && E.img[P0.back] && CAM.z < e.z) ? Object.assign({}, P0, { key: P0.back, anim: null, mouth: null }) : P0;
+  const P = (P0.back && E.img[P0.back] && CAM.z < e.z) ? Object.assign({}, P0, { key: P0.back, anim: null, mouth: null, scale: (P0.scale || 1) * (P0.backScale || 1) }) : P0;
   const im = poseImg(P, T, e); if (!im) return;
   // P.part — спрайт «по пояс»: картинка покрывает верхнюю долю part роста, низ картинки висит на высоте (1-part)·рост
   const hm = (e.h || C.height) * (P.scale || 1), part = P.part || 1;

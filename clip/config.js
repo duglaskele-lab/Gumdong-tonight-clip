@@ -3,7 +3,7 @@
 'use strict';
 const CLIP = {
   title: 'Can I Sleep with You Tonight?',
-  ver: 13,   // поднимать, когда картинку заменили под тем же именем (сбрасывает кеш браузера)
+  ver: 14,   // поднимать, когда картинку заменили под тем же именем (сбрасывает кеш браузера)
   audio: 'assets/audio/song_clip.mp3',   // первые 1:15 песни (быстрее грузится); полная — assets/audio/song.mp3
   bpm: 143.555, beatOffset: 0.186,          // доля ≈ 0.418 с
   duration: 71.0, fadeOut: 69.4,          // fadeOut — картинка уходит в чёрное к концу
@@ -60,7 +60,7 @@ const ASSETS = {
   rossali_bass: 'assets/sprites/rossali_bass.png', rossali_front: 'assets/sprites/rossali_front.png', rossali_side: 'assets/sprites/rossali_side.png',
   lupa_kit: 'assets/sprites/lupa_kit.png', lupa_portrait: 'assets/sprites/lupa_portrait.png', rossali_portrait: 'assets/sprites/rossali_portrait.png',
   lupa_front: 'assets/sprites/lupa_front.png', lupa_34: 'assets/sprites/lupa_34.png', lupa_face: 'assets/sprites/lupa_face.png',
-  maeve_sit: 'assets/sprites/maeve_sit.png', chair: 'assets/sprites/chair.png',   // стул-образец — для всех зрителей один
+  maeve_sit: 'assets/sprites/maeve_sit.png', maeve_sit_back: 'assets/sprites/maeve_sit_back.png', chair: 'assets/sprites/chair.png',   // стул-образец — для всех зрителей один
   maeve_front: 'assets/sprites/maeve_front.png', alex_front: 'assets/sprites/alex_front.png',
 };
 
@@ -100,8 +100,9 @@ const CHARACTERS = {
   lupa: { name: 'Lupa — ударные', height: 1.6, fallback: 'front', poses: { front: 'lupa_front', q34: 'lupa_34', face: 'lupa_face', portrait: 'lupa_portrait',
     kit: { key: 'lupa_kit', scale: .903, anim: 'lupa_play1' } } },   // scale: картинка выросла сверху под поднятые палочки   // kit — за своей установкой (установка в картинке; рост картинки ≈ 1.37 м по бочке 22")
   maeve: { name: 'Maeve (зритель)', height: 1.88, fallback: 'front', poses: { front: 'maeve_front',
-    // сидит на стуле-образце; рост картинки ≈ 1.2 м; back — вид сзади (камера за спиной: сцены 01, 05), пока нет — вид спереди
-    sit: { key: 'maeve_sit', scale: 1.2 / 1.88, back: 'maeve_sit_back' } } },
+    // сидит на стуле-образце, лицом к сцене; рост картинки ≈ 1.2 м; back — вид сзади (камера за спиной: сцены 01, 05),
+    // отзеркален (хвост с той же стороны, что спереди), backScale — стул на картинке сзади нарисован на 8 % мельче
+    sit: { key: 'maeve_sit', scale: 1.2 / 1.88, back: 'maeve_sit_back', backScale: 1.084 } } },
   alex: { name: 'Alex (танцует у сцены)', height: 1.75, fallback: 'front', poses: { front: 'alex_front' } },
 };
 
