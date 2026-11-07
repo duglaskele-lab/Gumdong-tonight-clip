@@ -113,7 +113,7 @@ function drawRoom(ctx, L, T) {
   }
   // неоновый полумесяц над занавесом
   { const p = proj(0, 3.75, R.z1 - .15); if (p) { const r = .32 * p[2]; ctx.save(); ctx.lineWidth = Math.max(2, .045 * p[2]); ctx.strokeStyle = '#ff5fa2'; ctx.shadowColor = '#ff2a7a'; ctx.shadowBlur = 30 * L.neon;
-      ctx.globalAlpha = .25 + .75 * L.neon; ctx.beginPath(); ctx.arc(p[0], p[1], r, Math.PI * .35, Math.PI * 1.65); ctx.arc(p[0] + r * .45, p[1] - r * .1, r * .78, Math.PI * 1.55, Math.PI * .45, true); ctx.closePath(); ctx.stroke(); ctx.restore(); } }
+      ctx.globalAlpha = .25 * (1 - (L.neonOff || 0)) + .75 * L.neon; ctx.beginPath(); ctx.arc(p[0], p[1], r, Math.PI * .35, Math.PI * 1.65); ctx.arc(p[0] + r * .45, p[1] - r * .1, r * .78, Math.PI * 1.55, Math.PI * .45, true); ctx.closePath(); ctx.stroke(); ctx.restore(); } }
   // сцена: верх и передняя грань
   poly(ctx, [[-R.stX, R.stH, R.stZ], [R.stX, R.stH, R.stZ], [R.stX, R.stH, R.z1], [-R.stX, R.stH, R.z1]], sh('#3a2328', .25 + sz * .6));
   poly(ctx, [[-R.stX, 0, R.stZ], [R.stX, 0, R.stZ], [R.stX, R.stH, R.stZ], [-R.stX, R.stH, R.stZ]], sh('#1e1014', .4 + hz * .4));

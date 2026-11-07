@@ -3,7 +3,7 @@
 'use strict';
 const CLIP = {
   title: 'Can I Sleep with You Tonight?',
-  ver: 19,   // поднимать, когда картинку заменили под тем же именем (сбрасывает кеш браузера)
+  ver: 20,   // поднимать, когда картинку заменили под тем же именем (сбрасывает кеш браузера)
   audio: 'assets/audio/song_clip.mp3',   // первые 1:15 песни (быстрее грузится); полная — assets/audio/song.mp3
   bpm: 143.555, beatOffset: 0.186,          // доля ≈ 0.418 с
   duration: 71.0, fadeOut: 70.2,          // fadeOut — картинка уходит в чёрное к концу
@@ -59,6 +59,7 @@ const ASSETS = {
   gumdong_back_guitar: 'assets/sprites/gumdong_back_guitar.png', gumdong_eyes: 'assets/sprites/gumdong_eyes.png',
   rossali_bass: 'assets/sprites/rossali_bass.png', rossali_front: 'assets/sprites/rossali_front.png', rossali_side: 'assets/sprites/rossali_side.png',
   rossali_wide: 'assets/sprites/rossali_wide.png', rossali_think: 'assets/sprites/rossali_think.png', rossali_laugh: 'assets/sprites/rossali_laugh.png',
+  lupa_t: 'assets/sprites/lupa_t.png', rossali_t: 'assets/sprites/rossali_t.png',   // финал: силуэты-буквы T
   lupa_kit: 'assets/sprites/lupa_kit.png', lupa_portrait: 'assets/sprites/lupa_portrait.png', rossali_portrait: 'assets/sprites/rossali_portrait.png',
   lupa_front: 'assets/sprites/lupa_front.png', lupa_34: 'assets/sprites/lupa_34.png', lupa_face: 'assets/sprites/lupa_face.png',
   alex_v: 'assets/sprites/alex_v.png', alex_side: 'assets/sprites/alex_side.png',
@@ -99,10 +100,10 @@ const CHARACTERS = {
     eyes: 'gumdong_eyes',               // глаза крупно — прямоугольный кадр, не вырезан
   } },
   rossali: { name: 'Rossali — бас', height: 1.74, fallback: 'bass', poses: { bass: 'rossali_bass', portrait: 'rossali_portrait',
-    wide: 'rossali_wide', laugh: 'rossali_laugh', think: 'rossali_think',   // крупные планы сцены 07: с басом (сигарета) / смеётся / задумалась
+    wide: 'rossali_wide', laugh: 'rossali_laugh', think: 'rossali_think', letterT: 'rossali_t',   // крупные планы сцены 07: с басом (сигарета) / смеётся / задумалась
     play: { key: 'rossali_bass', anim: 'rossali_play1' },   // portrait — по грудь, с сигаретой (только крупные планы)
      front: { key: 'rossali_front', inst: { x: .5, y: .56 } }, side: 'rossali_side' } },
-  lupa: { name: 'Lupa — ударные', height: 1.6, fallback: 'front', poses: { front: 'lupa_front', q34: 'lupa_34', face: 'lupa_face', portrait: 'lupa_portrait', stick: 'lupa_stick',
+  lupa: { name: 'Lupa — ударные', height: 1.6, fallback: 'front', poses: { front: 'lupa_front', q34: 'lupa_34', face: 'lupa_face', portrait: 'lupa_portrait', stick: 'lupa_stick', letterT: 'lupa_t',
     kit: { key: 'lupa_kit', scale: .903, anim: 'lupa_play1' } } },   // scale: картинка выросла сверху под поднятые палочки   // kit — за своей установкой (установка в картинке; рост картинки ≈ 1.37 м по бочке 22")
   maeve: { name: 'Maeve (зритель)', height: 1.88, fallback: 'front', poses: { front: 'maeve_front', chin: 'maeve_chin',
     // сидит на стуле-образце, лицом к сцене; рост картинки ≈ 1.2 м; back — вид сзади (камера за спиной: сцены 01, 05),
