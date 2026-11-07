@@ -200,7 +200,7 @@ ENT.char = (ctx, e, L, lt, T, S) => {
   const an = animOf(e.anim, T + (e.phase || 0));
   const light = entLight(e, L);
   ctx.save(); ctx.translate(p[0] + an.dx * fullH, p[1] + an.dy * fullH); ctx.rotate(an.r); ctx.scale(1, an.sy);
-  const o = { crop, flip: e.flip !== viewFlip, shade: (1 - light) * .88, shadeColor: e.zone === 'stage' ? '#12040a' : '#07040a',
+  const o = { crop, flip: !!e.flip !== viewFlip, shade: (1 - light) * .88, shadeColor: e.zone === 'stage' ? '#12040a' : '#07040a',
     sil: e.sil, silColor: e.silColor, alpha: e.alpha, glow: e.glow };   // sil 0..1 — заливка цветом silColor (силуэт), glow — свечение
   if (e.zone === 'stage' && L.rim) o.rim = { color: L.rimColor || '#ff2a55', amount: L.rim * (1 - light * .5), depth: .25 };
   drawImg(ctx, im, -ww / 2, -hh, ww, hh, o);
