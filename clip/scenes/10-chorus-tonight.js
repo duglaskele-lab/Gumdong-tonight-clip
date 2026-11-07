@@ -6,13 +6,13 @@ scene({
   id: '10 chorus tonight', start: b(144), end: b(150), world: true, lyrics: 'caption', bob: 12,
   cam: { keys: [
     { t: 0, x: 0, y: 1.6, z: 7.4, pitch: 4 },
-    { t: D10, x: 0, y: 1.65, z: 8.5, pitch: 4.5, e: 'linear' },
+    { t: D10, x: 0, y: 1.65, z: 8.5, pitch: 4.5, e: 'in' },   // мягкий разгон — стык со сценой 09 без рывка
   ] },
   set: {
     ents: { gumdong: { pose: 'playSing' } },   // цикл игры S1 + рот по голосу (камера далеко — процедурного рта достаточно)
     light: { house: .3, stage: 1, beams: 1, rim: .9 },
   },
-  fx: [{ t: 0, type: 'flash', dur: .25, amount: .7 }],
+  fx: [{ t: 0, type: 'flash', dur: .25, amount: .3 }],   // мягкий акцент на начало припева (склейки нет — камера продолжает облёт сцены 09)
   overlay: [{ type: 'note', text: '10 · припев: общий план, рот процедурный' }],
 });
 }

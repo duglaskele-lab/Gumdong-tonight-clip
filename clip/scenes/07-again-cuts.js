@@ -3,7 +3,7 @@
 const AG0 = 39.15 - b(93), AGD = .72;   // первое «again» от начала сцены и шаг
 const agT = i => AG0 + i * AGD;
 const shots = [
-  { char: 'gumdong', pose: 'scared', h: 980, x: W * .5, mouth: true },
+  { char: 'gumdong', pose: 'calm', h: 1300, x: W * .43, y: H + 300, mouth: true },   // как в сцене 03, чуть левее
   { char: 'rossali', pose: 'wide', h: 1080, x: W * .5, y: H + 70 },          // Rossali 1: с басом целиком (сигарета)
   { char: 'lupa', pose: 'portrait', h: 1000, x: W * .62, y: H + 60 },
   { char: 'maeve', pose: 'chin', h: 1120, x: W * .4, y: H + 60 },           // Maeve: подбородок на руках, застывшая улыбка
@@ -20,7 +20,7 @@ scene({
   layers: [
     { type: 'cuts', items: [{ t: 0, bg: '#000' }].concat(shots.map((s, i) => ({ t: agT(i), bg: s.bg || BGS[i % 2] }))) },
     { type: 'stepword', words: shots.map((s, i) => ({ t: agT(i), text: 'AGAIN' })), steps: [1, 1.22, 1.5], stepDur: AGD / 3, fit: .9, jitter: 14, color: '#f6efe4', y: H * .46 },
-    { type: 'cutsFront', push: .12, items: [{ t: 0, char: 'gumdong', pose: 'scared', h: 900, x: W / 2, shade: .5 }].concat(shots.map((s, i) => Object.assign({ t: agT(i) }, s))) },
+    { type: 'cutsFront', push: .12, items: [{ t: 0, char: 'gumdong', pose: 'calm', h: 1300, x: W * .43, y: H + 300, shade: .5 }].concat(shots.map((s, i) => Object.assign({ t: agT(i) }, s))) },
   ],
   overlay: [{ type: 'note', text: '07 · AGAIN: склейка на каждое слово' }],
 });
