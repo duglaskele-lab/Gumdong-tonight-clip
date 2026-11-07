@@ -140,7 +140,7 @@ const SET = {
     { id: 'gumdong', type: 'char', char: 'gumdong', pose: 'play', x: 0, y: .7, z: 13.3, zone: 'stage', mouth: true },   // поза play — анимация, своё движение не нужно
     // зал: столики и зрители (тени — заглушки до листов зрителей)
     { id: 't1', type: 'table', x: -3.6, z: 9.4 }, { id: 'maeve', type: 'char', char: 'maeve', pose: 'sit', x: -3.6, z: 8.85, zone: 'house', eyeY: .92 },
-    { id: 't2', type: 'table', x: 2.9, z: 9.0 }, { id: 'alex', type: 'char', char: 'alex', pose: 'sit', x: 2.9, z: 8.45, zone: 'house' }, /* Alex — у столика t2, место бывшей тени g1 */ { id: 'g2', type: 'ghost', x: 3.35, z: 9.5, color: '#2d3a4a', ears: 1.3, snout: true },
+    { id: 't2', type: 'table', x: 2.9, z: 9.0 }, { id: 'alex', type: 'char', char: 'alex', pose: 'sit', x: 3.55, z: 9.0, zone: 'house' }, /* Alex — сбоку от столика t2 (+x): в сцене 01 справа от стола, в 02 слева */ { id: 'g2', type: 'ghost', x: 2.4, z: 9.5, color: '#2d3a4a', ears: 1.3, snout: true },
     { id: 't3', type: 'table', x: -1.2, z: 7.0, r: .4 }, { id: 'g3', type: 'ghost', x: -1.0, z: 7.4, color: '#3d4030', ears: .7 },
     { id: 't4', type: 'table', x: 4.6, z: 5.6 }, { id: 'g4', type: 'ghost', x: 4.7, z: 6.05, color: '#40303a', snout: true },
     { id: 't5', type: 'table', x: -4.4, z: 4.8 }, { id: 'g5', type: 'ghost', x: -4.6, z: 5.25, color: '#30343e', ears: 1.2 },
