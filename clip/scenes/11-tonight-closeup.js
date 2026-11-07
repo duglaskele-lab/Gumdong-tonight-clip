@@ -49,7 +49,7 @@ function neonOn(lt, i) {   // зажигание неона: короткое м
 }
 // кирпич: падает сверху на голову, отскакивает и зависает точкой над i. Возвращает {y (в долях cap над головой), r}
 function brick(t) {
-  const FALL = .32, BOUNCE = .38, top = 2.2, rest = .42;
+  const FALL = .32, BOUNCE = .38, top = 2.2, rest = .21;   // зависает вдвое ближе к голове
   if (t < 0) return null;
   if (t < FALL) { const u = t / FALL; return { y: top * (1 - u * u), r: .5 * (1 - u) }; }                  // свободное падение
   const u = Math.min(1, (t - FALL) / BOUNCE), e = 1 - Math.pow(1 - u, 3);
@@ -70,7 +70,7 @@ LAYER.tonightWord = (ctx, Ly, S, lt, T) => {
   ctx.restore();
   // кирпич — точка над i
   const k = brick(lt - TB); if (!k) return;
-  const bw = cap * .3, bh = cap * .15, cx = r.cx, cy = base - cap - k.y * cap - bh / 2;   // y=0 — касается макушки
+  const bw = cap * .225, bh = cap * .1125,   /* на 25 % меньше */ cx = r.cx, cy = base - cap - k.y * cap - bh / 2;   // y=0 — касается макушки
   ctx.save(); ctx.globalAlpha = sm((lt - TB) / .12); ctx.translate(cx, cy); ctx.rotate(k.r);
   glowFill(ctx, () => { ctx.beginPath(); ctx.roundRect(-bw / 2, -bh / 2, bw, bh, bh * .12); ctx.fill(); });
   ctx.restore();
