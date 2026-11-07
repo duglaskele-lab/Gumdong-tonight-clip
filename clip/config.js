@@ -3,7 +3,7 @@
 'use strict';
 const CLIP = {
   title: 'Can I Sleep with You Tonight?',
-  ver: 20,   // поднимать, когда картинку заменили под тем же именем (сбрасывает кеш браузера)
+  ver: 21,   // поднимать, когда картинку заменили под тем же именем (сбрасывает кеш браузера)
   audio: 'assets/audio/song_clip.mp3',   // первые 1:15 песни (быстрее грузится); полная — assets/audio/song.mp3
   bpm: 143.555, beatOffset: 0.186,          // доля ≈ 0.418 с
   duration: 71.0, fadeOut: 70.2,          // fadeOut — картинка уходит в чёрное к концу
@@ -64,6 +64,7 @@ const ASSETS = {
   lupa_front: 'assets/sprites/lupa_front.png', lupa_34: 'assets/sprites/lupa_34.png', lupa_face: 'assets/sprites/lupa_face.png',
   alex_v: 'assets/sprites/alex_v.png', alex_side: 'assets/sprites/alex_side.png',
   lupa_stick: 'assets/sprites/lupa_stick.png', maeve_chin: 'assets/sprites/maeve_chin.png',
+  raithwyn_front: 'assets/sprites/raithwyn_front.png', raithwyn_back: 'assets/sprites/raithwyn_back.png',
   maeve_sit: 'assets/sprites/maeve_sit.png', maeve_sit_back: 'assets/sprites/maeve_sit_back.png', chair: 'assets/sprites/chair.png',   // стул-образец — для всех зрителей один
   maeve_front: 'assets/sprites/maeve_front.png', alex_front: 'assets/sprites/alex_front.png',
 };
@@ -109,6 +110,8 @@ const CHARACTERS = {
     // сидит на стуле-образце, лицом к сцене; рост картинки ≈ 1.2 м; back — вид сзади (камера за спиной: сцены 01, 05),
     // отзеркален (хвост с той же стороны, что спереди), backScale — стул на картинке сзади нарисован на 8 % мельче
     sit: { key: 'maeve_sit', scale: 1.2 / 1.88, back: 'maeve_sit_back', backScale: 1.084 } } },
+  raithwyn: { name: 'Raithwyn (зритель, стоит у столика Alex)', height: 1.6, fallback: 'stand', poses: {
+    stand: { key: 'raithwyn_front', back: 'raithwyn_back' } } },   // стоит лицом к сцене; вид сзади — когда камера за спиной
   alex: { name: 'Alex (зритель за столиком)', height: 1.75, fallback: 'front', poses: { front: 'alex_front', v: 'alex_v',   // v — крупный план со знаком V
     // сидит на стуле-образце лицом к сцене; есть только вид сбоку (вид спереди/сзади — когда будут картинки);
     // рост картинки ≈ 1.07 м — по стулу (0.845 м = 923 px)
@@ -145,7 +148,7 @@ const SET = {
     { id: 'gumdong', type: 'char', char: 'gumdong', pose: 'play', x: 0, y: .7, z: 13.3, zone: 'stage', mouth: true },   // поза play — анимация, своё движение не нужно
     // зал: столики и зрители (тени — заглушки до листов зрителей)
     { id: 't1', type: 'table', x: -3.6, z: 9.4 }, { id: 'maeve', type: 'char', char: 'maeve', pose: 'sit', x: -3.6, z: 8.85, zone: 'house', eyeY: .92 },
-    { id: 't2', type: 'table', x: 2.9, z: 9.0 }, { id: 'alex', type: 'char', char: 'alex', pose: 'sit', x: 3.55, z: 9.0, zone: 'house', face: [-1, 0] }, /* Alex — сбоку от столика t2 (+x), лицом к столу (face): в сцене 01 справа от стола, в 02 слева */ { id: 'g2', type: 'ghost', x: 2.4, z: 9.5, color: '#2d3a4a', ears: 1.3, snout: true },
+    { id: 't2', type: 'table', x: 2.9, z: 9.0 }, { id: 'alex', type: 'char', char: 'alex', pose: 'sit', x: 3.55, z: 9.0, zone: 'house', face: [-1, 0] }, /* Alex — сбоку от столика t2 (+x), лицом к столу (face): в сцене 01 справа от стола, в 02 слева */ { id: 'raithwyn', type: 'char', char: 'raithwyn', pose: 'stand', x: 2.2, z: 9.05, zone: 'house', eyes: true, eyeY: .835 }, /* Raithwyn стоит у столика t2 (−x, напротив Alex), вместо тени g2; глаза горят на «nightmare» */
     { id: 't3', type: 'table', x: -1.2, z: 7.0, r: .4 }, { id: 'g3', type: 'ghost', x: -1.0, z: 7.4, color: '#3d4030', ears: .7 },
     { id: 't4', type: 'table', x: 4.6, z: 5.6 }, { id: 'g4', type: 'ghost', x: 4.7, z: 6.05, color: '#40303a', snout: true },
     { id: 't5', type: 'table', x: -4.4, z: 4.8 }, { id: 'g5', type: 'ghost', x: -4.6, z: 5.25, color: '#30343e', ears: 1.2 },
