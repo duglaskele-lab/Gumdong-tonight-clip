@@ -3,7 +3,7 @@
 'use strict';
 const CLIP = {
   title: 'Can I Sleep with You Tonight?',
-  ver: 10,   // поднимать, когда картинку заменили под тем же именем (сбрасывает кеш браузера)
+  ver: 11,   // поднимать, когда картинку заменили под тем же именем (сбрасывает кеш браузера)
   audio: 'assets/audio/song_clip.mp3',   // первые 1:15 песни (быстрее грузится); полная — assets/audio/song.mp3
   bpm: 143.555, beatOffset: 0.186,          // доля ≈ 0.418 с
   duration: 71.0, fadeOut: 69.4,          // fadeOut — картинка уходит в чёрное к концу
@@ -37,6 +37,8 @@ const ANIM_FILES = {
   // кадры в той же рамке, что спрайт gumdong_mic → переход со статики незаметен
   gumdong_mic_up: { dir: 'assets/anim/gumdong_mic_up', frames: 121, fps: 24, loop: false },
   // lupa_play1 — Lupa играет на барабанах (L2), кадры в рамке спрайта lupa_kit, уменьшены до 0.6; цикл
+  // gumdong_back1 — со спины покачивается с гитарой (руки на месте), 121 кадр, без цикла; сцена 02
+  gumdong_back1: { dir: 'assets/anim/gumdong_back1', frames: 121, fps: 24, loop: false },
   lupa_play1: { dir: 'assets/anim/lupa_play1', frames: 121, fps: 24, loop: true },
   // rossali_play1 — Rossali играет на басе (R2), уменьшены до 0.75; цикл
   rossali_play1: { dir: 'assets/anim/rossali_play1', frames: 121, fps: 24, loop: true },
@@ -83,7 +85,8 @@ const CHARACTERS = {
     mic: { key: 'gumdong_mic', part: .6, mouth: { x: .5425, y: .262, w: .036, lip: '#cda98c', cover: { rx: .78, ry: .82 } } },
     micUp: { key: 'gumdong_mic', part: .6, anim: 'gumdong_mic_up' },  // анимация S3: у микрофона поднимает голову к свету
     singUp: 'gumdong_sing_up',          // в полный рост, голова вверх, глаза закрыты, поёт
-    backGuitar: 'gumdong_back_guitar',  // со спины с гитарой (отзеркалена: гриф в правой руке — она левша)
+    backGuitar: 'gumdong_back_guitar',
+    backPlay: { key: 'gumdong_back_guitar', anim: 'gumdong_back1' },   // анимация: со спины покачивается в такт  // со спины с гитарой (отзеркалена: гриф в правой руке — она левша)
     eyes: 'gumdong_eyes',               // глаза крупно — прямоугольный кадр, не вырезан
   } },
   rossali: { name: 'Rossali — бас', height: 1.74, fallback: 'bass', poses: { bass: 'rossali_bass', portrait: 'rossali_portrait', play: { key: 'rossali_bass', anim: 'rossali_play1' },   // portrait — по грудь, с сигаретой (только крупные планы)

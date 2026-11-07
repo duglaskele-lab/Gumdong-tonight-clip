@@ -12,7 +12,8 @@ scene({
   ] },
   set: {
     hide: ['rossali', 'lupa'],                     // они рядом/позади камеры, спрайты нарисованы лицом к зрителю
-    ents: { gumdong: { pose: 'backGuitar', mouth: false } },
+    // ролик со спины (5.04 с) чуть замедлен, чтобы ровно заполнить сцену (5.43 с), и начинается с её первого кадра
+    ents: { gumdong: { pose: 'backPlay', mouth: false, animSpeed: .93, animOffset: -b(19) * .93 } },
     light: { house: .38, stage: .5, candles: 1, beams: .55, rim: .5, rimColor: '#c040ff', string: .8 },
   },
   overlay: [{ type: 'note', text: '02 · со сцены в зал, через плечо Gumdong' }],
