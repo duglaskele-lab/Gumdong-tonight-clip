@@ -58,6 +58,7 @@ body.recording #rec{display:flex}
       <button id="play">▶ Play</button>
       <span id="time">00:00.00 / 00:00</span>
       <span id="scene"></span>
+      <button id="bCaps" class="on" title="Субтитры: текст песни внизу кадра (S)">Субтитры</button>
       <button id="bNotes" class="on" title="Метки прототипа (N)">Notes</button>
       <button id="bSync" title="Подгонка строк текста (L)">Sync lyrics</button>
       <button id="bCopy" title="Скопировать ссылку на текущий кадр (C)">Copy link</button>
@@ -82,7 +83,7 @@ body.recording #rec{display:flex}
       <div id="rProg"><div id="rBar"></div></div><a id="rLink" style="display:none"></a>
       <div id="rStatus">Запись идёт кадр за кадром, быстрее или медленнее реального времени — зависит от компьютера. Вкладку не закрывать.</div>
     </div>
-    <div class="row help">Space play/pause · ←/→ 2 с · Shift+←/→ 1 кадр · [ ] сцены · N метки · R запись · D инфо · H панель · L текст · ?t=0:41 — открыть на кадре</div>
+    <div class="row help">Space play/pause · ←/→ 2 с · Shift+←/→ 1 кадр · [ ] сцены · S субтитры · N метки · R запись · D инфо · H панель · L текст · ?t=0:41 — открыть на кадре · ?caps=0 — без субтитров</div>
   </div>
 </div>
 <div id="exp"><b>Вставьте это в clip/config.js → LYRICS (или пришлите в чат):</b><textarea id="expTxt" readonly></textarea><div class="row"><button id="expCopy">Copy</button><button id="expClose">Close</button></div></div>
@@ -148,6 +149,13 @@ for (const s of ['engine/core.js', 'engine/world.js', 'engine/layers.js', 'engin
   $('expCopy').onclick = () => { $('expTxt').select(); navigator.clipboard?.writeText($('expTxt').value).catch(() => document.execCommand('copy')); };
   $('bCopy').onclick = () => { const t = now(), m = Math.floor(t / 60), s = (t - m * 60).toFixed(1); const url = location.origin + location.pathname + '?t=' + m + ':' + s.padStart(4, '0');
     navigator.clipboard?.writeText(url).catch(() => {}); $('bCopy').textContent = 'Скопировано ' + fmt(t); setTimeout(() => $('bCopy').textContent = 'Copy link', 1500); };
+  // субтитры: вкл/выкл (кнопка, клавиша S, ?caps=0 в адресе); выбор запоминается в браузере
+  const setCaps = (on, draw = true) => { E.captions = on; $('bCaps').classList.toggle('on', on); $('bCaps').textContent = on ? 'Субтитры' : 'Без субтитров';
+    if ($('rText')) $('rText').checked = on; try { localStorage.setItem('caps', on ? '1' : '0'); } catch (e) {} if (draw && !playing && E.ready) renderAt(T, ctx); };
+  let caps0 = true; try { if (localStorage.getItem('caps') === '0') caps0 = false; } catch (e) {}
+  if (q.has('caps')) caps0 = q.get('caps') !== '0';
+  setCaps(caps0, false);
+  $('bCaps').onclick = () => setCaps(E.captions === false);
   $('bNotes').onclick = () => { E.notes = !E.notes; $('bNotes').classList.toggle('on', E.notes); if (!playing) renderAt(T, ctx); };
   $('bDbg').onclick = () => { document.body.classList.toggle('debug'); $('bDbg').classList.toggle('on'); };
   $('bHide').onclick = () => document.body.classList.toggle('hideui');
@@ -163,6 +171,7 @@ for (const s of ['engine/core.js', 'engine/world.js', 'engine/layers.js', 'engin
     else if (k === 'Home') seek(0);
     else if (/^[dD]$/.test(k)) $('bDbg').click(); else if (/^[hH]$/.test(k)) $('bHide').click();
     else if (/^[fF]$/.test(k)) $('bFull').click(); else if (/^[cC]$/.test(k)) $('bCopy').click();
+    else if (/^[sS]$/.test(k)) $('bCaps').click();
     else if (/^[nN]$/.test(k)) $('bNotes').click(); else if (/^[lL]$/.test(k)) toggleSync(); else if (/^[rR]$/.test(k)) $('bRec').click();
     else if (document.body.classList.contains('syncing') && k === 'Enter') { e.preventDefault(); syncMark(); }
     else if (document.body.classList.contains('syncing') && k === 'Backspace') { e.preventDefault(); syncBack(); }
