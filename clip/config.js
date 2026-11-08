@@ -146,7 +146,7 @@ const LYRICS = [
   { t: 33.66, end: 38.90, text: 'mom, can i sleep with you tonight?' },
   { t: 39.10, end: 46.60, text: 'again, again, again, again, again…' },
   { t: 48.20, end: 52.00, text: 'can i sleep with you tonight?' },   // голос вступает в 48.2 (до этого тишина)
-  { t: 60.60, end: 65.80, text: 'can i sleep with you tonight?' },
+  { t: 61.10, end: 65.80, text: 'can i sleep with you tonight?' },   // первый громкий слог — 61.17 (до этого вдох/подголоски)
 ];
 
 // Декорации клуба (мир в метрах). Сцена может спрятать (set.hide), переопределить (set.ents) или добавить (set.add) объекты.
