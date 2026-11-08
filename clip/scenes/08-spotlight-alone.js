@@ -7,8 +7,8 @@ scene({
     { t: 0, x: .05, y: 1.95, z: 12.45, pitch: 0 },
     { t: b(127) - b(112), x: .02, y: 1.95, z: 12.62, pitch: 0, e: 'linear' },
   ] },
-  set: { hide: ['mic'], ents: { gumdong: { pose: 'micPlay' } },   // у микрофона играет (анимация, стойка в кадрах), рот по голосу
+  set: { hide: ['mic'], ents: { gumdong: { pose: 'micPlay', animOffset: -b(112) } },   // у микрофона играет (ролик с 1-го кадра, вперёд-назад), рот по голосу
     light: { house: 0, stage: .06, candles: .12, beams: 0, string: .08, neon: .15, edge: .1, rim: .25, spot: 'gumdong', spotK: 1 } },
   post: { vignette: .8 },
-  overlay: [{ type: 'note', text: '08 · луч, у микрофона, рот по голосу (процедурный)' }],
+  overlay: [{ type: 'note', text: '08 · луч, у микрофона, ролик вперёд-назад, рот по голосу (процедурный)' }],
 });

@@ -40,7 +40,7 @@ const ANIM_FILES = {
   // gumdong_back1 — со спины покачивается с гитарой (руки на месте), 121 кадр, без цикла; сцена 02
   gumdong_back1: { dir: 'assets/anim/gumdong_back1', frames: 121, fps: 24, loop: false },
   // gumdong_mic_play — у микрофона играет на гитаре (Seedance), кадры в рамке спрайта gumdong_mic (×0.75); верх уха обрезан Seedance — держать за кадром
-  gumdong_mic_play: { dir: 'assets/anim/gumdong_mic_play', frames: 121, fps: 24, loop: true },
+  gumdong_mic_play: { dir: 'assets/anim/gumdong_mic_play', frames: 121, fps: 24, loop: 'pingpong' },   // рот Seedance стёрт в кадрах (рот — кодом по ANIM_TRACK)
   lupa_play1: { dir: 'assets/anim/lupa_play1', frames: 121, fps: 24, loop: true },
   // rossali_play1 — Rossali играет на басе (R2), уменьшены до 0.75; цикл
   rossali_play1: { dir: 'assets/anim/rossali_play1', frames: 121, fps: 24, loop: true },
@@ -98,7 +98,7 @@ const CHARACTERS = {
     // движок рисует свой рот по голосу (процедурно, пока нет 4 нарисованных ртов)
     mic: { key: 'gumdong_mic', part: .6, mouth: { x: .5425, y: .262, w: .036, lip: '#cda98c', cover: { rx: .78, ry: .82 } } },
     // то же + анимация игры; рот закрашивается и рисуется по голосу, положение — по кадрам (anim_track.js)
-    micPlay: { key: 'gumdong_mic', part: .6, anim: 'gumdong_mic_play', mouth: { x: .5425, y: .262, w: .036, lip: '#cda98c', cover: { rx: .9, ry: 1.0 } } },
+    micPlay: { key: 'gumdong_mic', part: .6, anim: 'gumdong_mic_play', mouth: { x: .543, y: .247, w: .032, lip: '#cda98c', line: true, clipOut: { x: .4784, y: .2681, rx: .0366, ry: .0272 } } },
     micUp: { key: 'gumdong_mic', part: .6, anim: 'gumdong_mic_up' },  // анимация S3: у микрофона поднимает голову к свету
     singUp: 'gumdong_sing_up',          // в полный рост, голова вверх, глаза закрыты, поёт
     backGuitar: 'gumdong_back_guitar',

@@ -76,6 +76,7 @@ function animIdx(P, T, o = {}) {
   const fr = E.anim && E.anim[P.anim]; if (!P.anim || !fr || !fr.length) return -1;
   const a = ANIM_FILES[P.anim], n = fr.length;
   const i = Math.floor((T * (o.animSpeed ?? P.animSpeed ?? 1) + (o.animOffset ?? P.animOffset ?? 0)) * a.fps);   // animSpeed: 0 — стоп-кадр
+  if (a.loop === 'pingpong') { const p = 2 * n - 2, k = ((i % p) + p) % p; return k < n ? k : p - k; }   // вперёд-назад: нет шва цикла
   return a.loop === false ? clamp(i, 0, n - 1) : ((i % n) + n) % n;
 }
 // Где рот в момент T: у анимации с дорожкой ANIM_TRACK (assets/data/anim_track.js) — по кадру, иначе P.mouth.
@@ -172,10 +173,20 @@ function drawImg(ctx, im, x, y, w, h, o = {}) {
 // Рот для липсинка поверх спрайта. m: {x,y,w} доли спрайта (без crop), open 0..1
 // m.cover {rx, ry} (в ширинах рта) — закрасить нарисованный на спрайте рот цветом кожи m.lip и рисовать свой,
 // в тишине — закрытый рот линией (для спрайта, где рот нарисован открытым).
+// m.line — рисовать закрытый рот линией в тишине (нарисованный рот уже стёрт в кадрах, cover не нужен).
+// m.clipOut {x, y, rx, ry} (доли спрайта) — эллипс, внутри которого рот не рисуется (головка микрофона перед лицом).
 function drawMouth(ctx, x, y, w, h, m, open, crop, flip) {
   const c = crop || [0, 0, 1, 1];
   let mx = (m.x - c[0]) / c[2], my = (m.y - c[1]) / c[3]; if (flip) mx = 1 - mx;
   const mw = m.w / c[2] * w, cx = x + mx * w, cy = y + my * h;
+  if (m.clipOut) {
+    const k = m.clipOut; let ex = (k.x - c[0]) / c[2]; if (flip) ex = 1 - ex;
+    ctx.save(); ctx.beginPath(); ctx.rect(x - w, y - h, w * 3, h * 3);
+    ctx.ellipse(x + ex * w, y + (k.y - c[1]) / c[3] * h, k.rx / c[2] * w, k.ry / c[3] * h, 0, 0, Math.PI * 2); ctx.clip('evenodd');
+    drawMouth(ctx, x, y, w, h, Object.assign({}, m, { clipOut: null }), open, crop, flip); ctx.restore(); return;
+  }
+  if (m.line && open < .08) { ctx.save(); ctx.strokeStyle = '#3a1c18'; ctx.lineWidth = Math.max(1, mw * .06); ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.moveTo(cx - mw * .3, cy + mw * .03); ctx.quadraticCurveTo(cx, cy - mw * .04, cx + mw * .3, cy + mw * .02); ctx.stroke(); ctx.restore(); return; }
   if (m.cover) {
     ctx.save(); ctx.fillStyle = m.lip; ctx.shadowColor = m.lip; ctx.shadowBlur = mw * .25;
     ctx.beginPath(); ctx.ellipse(cx, cy, m.cover.rx * mw, m.cover.ry * mw, 0, 0, Math.PI * 2); ctx.fill(); ctx.restore();
