@@ -233,7 +233,10 @@ function renderAt(T, outCtx) {
       const sh = typeof S.shake === 'function' ? S.shake(lt, T) : (S.shake || 0);
       ctx.translate(W / 2 + (rand(Math.floor(T * 24)) - .5) * sh, H / 2 + dy + (rand(Math.floor(T * 24) + 99) - .5) * sh); ctx.scale(k, k); ctx.translate(-W / 2, -H / 2);
     }
-    if (S.world) drawWorld(ctx, S, lt, T);
+    if (S.world && S.worldBlur) {   // клуб размытым фоном (крупный план: глубина резкости)
+      const [c, g] = scratch('wblur', W, H); g.setTransform(1, 0, 0, 1, 0, 0); g.fillStyle = '#000'; g.fillRect(0, 0, W, H); drawWorld(g, S, lt, T);
+      ctx.save(); ctx.filter = `blur(${typeof S.worldBlur === 'function' ? S.worldBlur(lt, T) : S.worldBlur}px)`; ctx.drawImage(c, 0, 0); ctx.restore();
+    } else if (S.world) drawWorld(ctx, S, lt, T);
     for (const L of S.layers || []) drawLayer(ctx, L, S, lt, T);
     ctx.restore();
     for (const L of S.overlay || []) drawLayer(ctx, L, S, lt, T);
