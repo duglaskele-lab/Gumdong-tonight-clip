@@ -139,8 +139,8 @@ const CHARACTERS = {
 
 // Текст песни для подписей. t/end — секунды. Уточняется инструментом Sync lyrics (клавиша L) в плеере.
 const LYRICS = [
-  { t: 13.84, end: 15.40, text: "i'm really scared" },
-  { t: 15.60, end: 22.50, text: 'mom, can i sleep with you tonight?' },
+  { t: 13.84, end: 16.30, text: "i'm really scared" },   // «scared» тянется до 16.3
+  { t: 16.60, end: 22.50, text: 'mom, can i sleep with you tonight?' },   // «mom» — 16.65, после паузы
   { t: 24.16, end: 29.20, text: "it's not a nightmare, i'm dreaming, it's a nightmare i live in" },
   { t: 29.98, end: 32.60, text: "i'm really scared" },
   { t: 33.66, end: 38.90, text: 'mom, can i sleep with you tonight?' },
