@@ -86,6 +86,9 @@ const CHARACTERS = {
     scared: { key: 'gumdong_scared_closed', mouth: { x: .499, y: .446, w: .106 },
       mouths: ['gumdong_scared_closed', 'gumdong_scared_half', 'gumdong_scared_wide', 'gumdong_scared_o'] },
     // спокойный портрет анфас (её обычное усталое выражение) с 4 ртами — сцена 03
+    // calmBust — тот же портрет в 3D-клубе: картинка = верхние 43 % роста (уши → грудь), сцена 03
+    calmBust: { key: 'gumdong_calm_closed', part: .43, mouth: { x: .4975, y: .48, w: .06 },
+      mouths: ['gumdong_calm_closed', 'gumdong_calm_half', 'gumdong_calm_wide', 'gumdong_calm_o'] },
     calm: { key: 'gumdong_calm_closed', mouth: { x: .4975, y: .48, w: .06 },
       mouths: ['gumdong_calm_closed', 'gumdong_calm_half', 'gumdong_calm_wide', 'gumdong_calm_o'] },
     q34: { key: 'gumdong_34_half', mouth: { x: .364, y: .46, w: .08 },

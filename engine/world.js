@@ -64,16 +64,18 @@ function worldState(S, lt, T) {
   return { light, ents };
 }
 
-function drawWorld(ctx, S, lt, T) {
+// part: 'bg' — всё, кроме S.sharp (для размытого фона), 'fg' — только объекты S.sharp (резкие, поверх размытого)
+function drawWorld(ctx, S, lt, T, part) {
   setCam(S.cam.smooth != null ? splineAt(S.cam.keys, lt, S.cam.smooth) : keyAt(S.cam.keys, lt));   // smooth: плавная кривая через все ключи
-  const st = worldState(S, lt, T), L = st.light;
+  const st = worldState(S, lt, T), L = st.light, sharp = S.sharp || [];
   ctx.save();
   if (CAM.roll) { ctx.translate(W / 2, H / 2); ctx.rotate(CAM.roll * Math.PI / 180); ctx.translate(-W / 2, -H / 2); }
-  drawRoom(ctx, L, T);
+  if (part !== 'fg') drawRoom(ctx, L, T);
   // билборды: от дальних к ближним
-  const list = st.ents.map(e => ({ e, d: toCam(e.x, (e.y || 0) + 1, e.z)[2] })).filter(o => o.d > NEAR).sort((a, b) => b.d - a.d);
+  const list = st.ents.filter(e => !part || (part === 'fg') === sharp.includes(e.id))
+    .map(e => ({ e, d: toCam(e.x, (e.y || 0) + 1, e.z)[2] })).filter(o => o.d > NEAR).sort((a, b) => b.d - a.d);
   for (const { e } of list) drawEnt(ctx, e, L, lt, T, S);
-  drawBeams(ctx, L, st, T, 'front');
+  if (part !== 'fg') drawBeams(ctx, L, st, T, 'front');
   ctx.restore();
 }
 
