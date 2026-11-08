@@ -12,7 +12,8 @@ scene({
     { t: b(144) - b(127), x: 0, y: 1.6, z: 7.4, yaw: 0, pitch: 4, roll: 0 },
   ] },
   set: { light: { house: .3, stage: 1, beams: 1, rim: .9 } },   // как в сцене 10 — свет на стыке не меняется
-  post: { glitch: lt => hump(lt) * .3, chroma: lt => hump(lt) * 2, vhs: lt => 1 - clamp((lt - (D9() - 1.5)) / 1.2, 0, 1) },
+  post: { glitch: lt => hump(lt) * .3, chroma: lt => hump(lt) * 2, red: lt => clamp((lt - 3.3) / .8, 0, 1) * (1 - hump(lt)),   /* пока идёт RGB-сдвиг, он сам даёт красный */   // с ~57 с — красный свет, продолжается во всей сцене 10
+    vhs: lt => 1 - clamp((lt - (D9() - 1.5)) / 1.2, 0, 1) },
   overlay: [{ type: 'note', text: '09 · проигрыш: Gumdong — цикл игры (S1)' }],
 });
 }

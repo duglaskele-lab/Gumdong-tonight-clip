@@ -281,6 +281,13 @@ function postFX(ctx, S, T) {
     g.globalCompositeOperation = 'destination-in'; g.drawImage(E.buf, 0, 0);
     ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = .55; ctx.drawImage(c, chroma, 0); ctx.restore();
   }
+  // красный свет: тот же красный канал без сдвига — ровный тёплый «залив» (продолжение вида RGB-сдвига)
+  const red = typeof P.red === 'function' ? P.red(lt, T) : (P.red || 0);
+  if (red > 0) {
+    const [c, g] = scratch('post', W, H); g.globalCompositeOperation = 'source-over'; g.clearRect(0, 0, W, H); g.drawImage(E.buf, 0, 0); g.globalCompositeOperation = 'multiply'; g.fillStyle = '#ff0000'; g.fillRect(0, 0, W, H);
+    g.globalCompositeOperation = 'destination-in'; g.drawImage(E.buf, 0, 0); g.globalCompositeOperation = 'source-over';
+    ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = .55 * red; ctx.drawImage(c, 0, 0); ctx.restore();
+  }
   // пиксельная сетка
   const px = P.pixel || 1;
   if (px > 1) {
