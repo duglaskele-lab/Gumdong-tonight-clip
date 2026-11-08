@@ -10,4 +10,5 @@ exclude:
   - assets/audio/song.mp3
   - assets/sprites/*.png
   - assets/anim/gumdong_sing1
+  - assets/anim/freija_dance   # танец FreijaFoxy — не используется (плохо вырезан белый мех на белом фоне), ждёт ролика на зелёном фоне
   - .github
