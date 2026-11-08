@@ -8,8 +8,8 @@ const r = A * Math.PI / 180;
 const CAM6 = { x: G.x + R * Math.sin(r), y: G.y - .2, z: G.z - R * Math.cos(r), yaw: -A + OF, pitch: 7, fov: 60 };
 scene({
   id: '06 closeup 3/4', start: b(80), end: b(93), lyrics: 'caption', world: true, worldBlur: 6, sharp: ['gumdong'],
-  cam: { keys: [Object.assign({ t: 0 }, CAM6), Object.assign({ t: b(93) - b(80) }, CAM6)] },   // статичная камера
-  set: { hide: ['mic'], ents: { gumdong: { pose: 'q34Bust', mouth: true, anim: [['breath', 1.5], ['sway', .175]] } },   // не статична: дыхание (сжатие-растяжение) и лёгкое покачивание
+  cam: { keys: [Object.assign({ t: 0 }, CAM6), Object.assign({ t: b(93) - b(80) }, CAM6, { x: CAM6.x + .07, e: 'linear' })] },   // почти статичная: медленно сдвигается вправо на 7 см
+  set: { hide: ['mic'], ents: { gumdong: { pose: 'q34Bust', mouth: true, anim: [['breath', 1], ['sway', .11]] } },   // не статична: дыхание (сжатие-растяжение) и лёгкое покачивание
     light: { house: .2, stage: .9, beams: 1, rim: .8 } },
   overlay: [{ type: 'note', text: '06 · 3/4, липсинк: 4 нарисованных рта; фон — размытая сцена' }],
 });
