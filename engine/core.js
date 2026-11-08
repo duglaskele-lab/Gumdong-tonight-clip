@@ -76,6 +76,7 @@ function animIdx(P, T, o = {}) {
   const fr = E.anim && E.anim[P.anim]; if (!P.anim || !fr || !fr.length) return -1;
   const a = ANIM_FILES[P.anim], n = fr.length;
   const i = Math.floor((T * (o.animSpeed ?? P.animSpeed ?? 1) + (o.animOffset ?? P.animOffset ?? 0)) * a.fps);   // animSpeed: 0 — стоп-кадр
+  if (Array.isArray(a.loop)) { const [l0, l1] = a.loop; return i < l1 ? Math.max(0, i) : l0 + (i - l0) % (l1 - l0); }   // [l0, l1]: с начала, потом петля l0…l1-1
   if (a.loop === 'pingpong') { const p = 2 * n - 2, k = ((i % p) + p) % p; return k < n ? k : p - k; }   // вперёд-назад: нет шва цикла
   return a.loop === false ? clamp(i, 0, n - 1) : ((i % n) + n) % n;
 }
@@ -84,8 +85,19 @@ function mouthAt(P, T, o) {
   const tr = window.ANIM_TRACK && P.anim && ANIM_TRACK[P.anim]; if (!tr || !P.mouth) return P.mouth;
   const i = animIdx(P, T, o); return i >= 0 && tr[i] ? Object.assign({}, P.mouth, { x: tr[i][0], y: tr[i][1] }) : P.mouth;
 }
+// Нарисованный рот поверх кадра анимации (P.mouthPatch): кусок с ртом (keys[mouthIdx]) ставится в точку
+// ANIM_TRACK[P.anim][кадр] = [x, y, угол] (доли кадра, радианы) — рот двигается и наклоняется вместе с головой.
+function withMouthPatch(P, base, i, T) {
+  const mp = P.mouthPatch, pim = E.img[mp.keys[mouthIdx(T)]]; if (!base || !pim) return base;
+  const tr = (i >= 0 && window.ANIM_TRACK && ANIM_TRACK[P.anim] && ANIM_TRACK[P.anim][i]) || mp.at;
+  const [c, g] = scratch('mpatch', base.width, base.height); g.drawImage(base, 0, 0);
+  g.translate(tr[0] * base.width, tr[1] * base.height); g.rotate(tr[2] || 0);
+  const pw = mp.w * base.width, ph = mp.h * base.height; g.drawImage(pim, -pw / 2, -ph / 2, pw, ph);
+  return c;
+}
 function poseImg(P, T, o = {}) {
   const i = animIdx(P, T, o);
+  if (P.mouthPatch && o.mouth) return withMouthPatch(P, i >= 0 ? (E.anim[P.anim][i] || E.img[P.key]) : E.img[P.key], E.anim && E.anim[P.anim] && E.anim[P.anim][i] ? i : -1, T);
   if (i >= 0) return E.anim[P.anim][i] || E.img[P.key];
   if (P.anim && E.anim && !E.anim[P.anim] && typeof ANIM_FILES !== 'undefined' && ANIM_FILES[P.anim]) loadAnim(P.anim);   // на всякий случай: догрузить по требованию
   if (o.mouth && P.mouths) return E.img[P.mouths[mouthIdx(T)]] || E.img[P.key];

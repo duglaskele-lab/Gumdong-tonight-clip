@@ -40,6 +40,8 @@ const ANIM_FILES = {
   // gumdong_back1 — со спины покачивается с гитарой (руки на месте), 121 кадр, без цикла; сцена 02
   gumdong_back1: { dir: 'assets/anim/gumdong_back1', frames: 121, fps: 24, loop: false },
   // gumdong_mic_play — у микрофона играет на гитаре (Seedance), кадры в рамке спрайта gumdong_mic (×0.75); верх уха обрезан Seedance — держать за кадром
+  // gumdong_calm_sway — портрет, покачивает головой (Seedance), сцена 03; с начала, потом бесшовная петля кадров 44…91 (одно покачивание, 2 с)
+  gumdong_calm_sway: { dir: 'assets/anim/gumdong_calm_sway', frames: 121, fps: 24, loop: [44, 92] },
   gumdong_mic_play: { dir: 'assets/anim/gumdong_mic_play', frames: 121, fps: 24, loop: 'pingpong' },   // рот Seedance стёрт в кадрах (рот — кодом по ANIM_TRACK)
   lupa_play1: { dir: 'assets/anim/lupa_play1', frames: 121, fps: 24, loop: true },
   // rossali_play1 — Rossali играет на басе (R2), уменьшены до 0.75; цикл
@@ -55,6 +57,9 @@ const ASSETS = {
   gumdong_scared_wide: 'assets/sprites/gumdong_scared_wide.png', gumdong_scared_o: 'assets/sprites/gumdong_scared_o.png',
   gumdong_calm_closed: 'assets/sprites/gumdong_calm_closed.png', gumdong_calm_half: 'assets/sprites/gumdong_calm_half.png',
   gumdong_calm_wide: 'assets/sprites/gumdong_calm_wide.png', gumdong_calm_o: 'assets/sprites/gumdong_calm_o.png',
+  // сцена 03: портрет в рамке ролика покачивания (поля 50/30 px) и вырезанные рты для наложения на кадры ролика
+  gumdong_calm_pad: 'assets/sprites/gumdong_calm_pad.png', gumdong_calm_mp_closed: 'assets/sprites/gumdong_calm_mp_closed.png',
+  gumdong_calm_mp_half: 'assets/sprites/gumdong_calm_mp_half.png', gumdong_calm_mp_wide: 'assets/sprites/gumdong_calm_mp_wide.png', gumdong_calm_mp_o: 'assets/sprites/gumdong_calm_mp_o.png',
   gumdong_34_closed: 'assets/sprites/gumdong_34_closed.png', gumdong_34_half: 'assets/sprites/gumdong_34_half.png',
   gumdong_34_wide: 'assets/sprites/gumdong_34_wide.png', gumdong_34_o: 'assets/sprites/gumdong_34_o.png',
   gumdong_mic: 'assets/sprites/gumdong_mic.png', gumdong_sing_up: 'assets/sprites/gumdong_sing_up.png',
@@ -87,8 +92,10 @@ const CHARACTERS = {
       mouths: ['gumdong_scared_closed', 'gumdong_scared_half', 'gumdong_scared_wide', 'gumdong_scared_o'] },
     // спокойный портрет анфас (её обычное усталое выражение) с 4 ртами — сцена 03
     // calmBust — тот же портрет в 3D-клубе: картинка = верхние 43 % роста (уши → грудь), сцена 03
-    calmBust: { key: 'gumdong_calm_closed', part: .43, mouth: { x: .4975, y: .48, w: .06 },
-      mouths: ['gumdong_calm_closed', 'gumdong_calm_half', 'gumdong_calm_wide', 'gumdong_calm_o'] },
+    // ролик Seedance с покачиванием головы; рамка шире спрайта (поля) → scale/part пересчитаны, чтобы размер не изменился;
+    // рот Seedance стёрт в кадрах, нарисованные рты накладываются по дорожке головы (mouthPatch)
+    calmBust: { key: 'gumdong_calm_pad', part: .4355, scale: 1.0097, anim: 'gumdong_calm_sway',
+      mouthPatch: { keys: ['gumdong_calm_mp_closed', 'gumdong_calm_mp_half', 'gumdong_calm_mp_wide', 'gumdong_calm_mp_o'], w: 140 / 1095, h: 152 / 1356, at: [545 / 1095, 666 / 1356, 0] } },
     calm: { key: 'gumdong_calm_closed', mouth: { x: .4975, y: .48, w: .06 },
       mouths: ['gumdong_calm_closed', 'gumdong_calm_half', 'gumdong_calm_wide', 'gumdong_calm_o'] },
     q34: { key: 'gumdong_34_half', mouth: { x: .364, y: .46, w: .08 },

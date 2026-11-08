@@ -13,7 +13,7 @@ function orbit(t, u) {   // u 0..1 — доля облёта
 scene({
   id: '03 closeup scared', start: b(32), end: b(57), lyrics: 'caption', world: true, worldBlur: 6, sharp: ['gumdong'],
   cam: { smooth: .6, keys: [0, .25, .5, .75, 1].map(u => orbit(u * D3, u)) },
-  set: { hide: ['mic'], ents: { gumdong: { pose: 'calmBust', mouth: true } },
+  set: { hide: ['mic'], ents: { gumdong: { pose: 'calmBust', mouth: true, animOffset: -b(32) } },   // ролик покачивания с 1-го кадра
     light: { house: .2, stage: .9, beams: 1, rim: .8 } },
   fx: [{ t: 0, type: 'flash', dur: .3, amount: .55, color: '#ff8aa0' }],
   overlay: [{ type: 'note', text: '03 · ЛИПСИНК: 4 нарисованных рта; облёт: Rossali → Gumdong → Lupa' }],
