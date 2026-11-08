@@ -295,8 +295,9 @@ function postFX(ctx, S, T) {
     ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.imageSmoothingEnabled = false; ctx.drawImage(c, 0, 0, W, H); ctx.restore();
   }
   // VHS: полоса срыва синхронизации
-  if (P.vhs) {
-    const by = ((T * 0.13) % 1.3) * H - 100; ctx.save(); ctx.globalAlpha = .12 * P.vhs; ctx.fillStyle = '#fff'; ctx.fillRect(0, by, W, 14); ctx.globalAlpha = .06 * P.vhs; ctx.fillRect(0, by + 20, W, 40); ctx.restore();
+  const vhs = typeof P.vhs === 'function' ? P.vhs(lt, T) : (P.vhs || 0);
+  if (vhs > 0) {
+    const by = ((T * 0.13) % 1.3) * H - 100; ctx.save(); ctx.globalAlpha = .12 * vhs; ctx.fillStyle = '#fff'; ctx.fillRect(0, by, W, 14); ctx.globalAlpha = .06 * vhs; ctx.fillRect(0, by + 20, W, 40); ctx.restore();
   }
   // сканлайны
   if (P.scan) { ctx.save(); ctx.globalAlpha = P.scan; ctx.fillStyle = '#000'; for (let y = 0; y < H; y += (P.pixel || 2) * 2) ctx.fillRect(0, y, W, P.pixel || 2); ctx.restore(); }
