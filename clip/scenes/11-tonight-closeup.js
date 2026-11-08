@@ -16,7 +16,7 @@ const C = 1.68;                     // высота буквы в метрах =
 const Z = 13.3, Y = .7;             // все три на одной линии сцены (глубина Gumdong)
 const sm = u => { u = clamp(u, 0, 1); return u * u * (3 - 2 * u); };
 const WHITE = { silColor: '#fdf8ff', glow: { color: 'rgba(255,240,255,.9)', blur: 26 } };
-const AUDIENCE = ['maeve', 'g1', 'raithwyn', 'chillet', 'g4', 'g5', 'alex'];
+const AUDIENCE = ['maeve', 'g1', 'raithwyn', 'chillet', 'couple', 'g5', 'alex'];
 const FONT = '800 {S}px Nunito';   // неон потоньше — под тонкие силуэты-буквы
 const font = sz => FONT.replace('{S}', sz);
 
