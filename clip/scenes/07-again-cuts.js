@@ -16,7 +16,8 @@ const shots = [
 ];
 const BGS = ['#8a0014', '#1d1a22'];
 scene({
-  id: '07 again cuts', start: b(93), end: b(112), lyrics: 'caption',
+  id: '07 again cuts', start: b(93), end: b(112),
+  lyrics: lt => lt >= agT(shots.length - 1) ? 'none' : 'caption',   // на глазах крупно (последняя склейка) «again» уже не поют — без подписи
   layers: [
     { type: 'cuts', items: [{ t: 0, bg: '#000' }].concat(shots.map((s, i) => ({ t: agT(i), bg: s.bg || BGS[i % 2] }))) },
     { type: 'stepword', words: shots.map((s, i) => ({ t: agT(i), text: 'AGAIN' })), steps: [1, 1.22, 1.5], stepDur: AGD / 3, fit: .9, jitter: 14, color: '#f6efe4', y: H * .46 },
