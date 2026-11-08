@@ -1,8 +1,9 @@
 /* 01 · Пролёт через зал. Камера от входа между столиками к сцене; группа в контровом свете. */
 scene({
   id: '01 intro flythrough', start: 0, end: b(19), world: true, lyrics: 'none',
-  cam: { keys: [
-    { t: 0, x: .7, y: 1.6, z: -3.2, yaw: -3, pitch: 1.5 },
+  cam: { smooth: .6, keys: [   // начинает левее и по дуге смещается вправо, к центру; конечная точка прежняя
+    { t: 0, x: -1.3, y: 1.6, z: -3.2, yaw: 5, pitch: 1.5 },
+    { t: b(10), x: -.55, y: 1.53, z: 2.6, yaw: 3, pitch: 2.6 },
     { t: b(19), x: .25, y: 1.45, z: 8.0, yaw: 0, pitch: 4, e: 'io' },
   ] },
   set: { light: { house: .28, stage: .18, beams: 1, rim: 1, candles: 1 } },
