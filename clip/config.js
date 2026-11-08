@@ -72,6 +72,7 @@ const ASSETS = {
   alex_v: 'assets/sprites/alex_v.png', alex_side: 'assets/sprites/alex_side.png',
   lupa_stick: 'assets/sprites/lupa_stick.png', maeve_chin: 'assets/sprites/maeve_chin.png',
   raithwyn_front: 'assets/sprites/raithwyn_front.png', raithwyn_back: 'assets/sprites/raithwyn_back.png',
+  freija_front: 'assets/sprites/freija_front.png', freija_back: 'assets/sprites/freija_back.png',   // FreijaFoxy (src-sheets/freija_*_src.png)
   couple_front: 'assets/sprites/couple_front.png', couple_back: 'assets/sprites/couple_back.png',   // пара: кролик и конь (src-sheets/couple_*_src.png; вид сзади отзеркален — конь слева, как и должно быть со спины)
   chillet: 'assets/sprites/chillet.png',
   maeve_sit: 'assets/sprites/maeve_sit.png', maeve_sit_back: 'assets/sprites/maeve_sit_back.png', chair: 'assets/sprites/chair.png',   // стул-образец — для всех зрителей один
@@ -132,6 +133,8 @@ const CHARACTERS = {
   chillet: { name: 'Chillet (маленький зверёк, спит перед столиком t3)', height: .45, fallback: 'sleep', poses: { sleep: 'chillet' } },   // только вид спереди: со входа его закрывает стол
   raithwyn: { name: 'Raithwyn (зритель, стоит у столика Alex)', height: 1.6, fallback: 'stand', poses: {
     stand: { key: 'raithwyn_front', back: 'raithwyn_back' } } },
+  freija: { name: 'FreijaFoxy (зритель, стоит у столика t5, руки на бёдрах)', height: 1.72, fallback: 'stand', poses: {
+    stand: { key: 'freija_front', back: 'freija_back' } } },   // рост картинки — до кончика рога
   couple: { name: 'Пара (зрители, стоят у столика t4): девушка-кролик и конь обнимает её за талию', height: 1.95, fallback: 'stand', poses: {
     stand: { key: 'couple_front', back: 'couple_back' } } },   // рост картинки = конь до кончиков ушей   // стоит лицом к сцене; вид сзади — когда камера за спиной
   alex: { name: 'Alex (зритель за столиком)', height: 1.75, fallback: 'front', poses: { front: 'alex_front', v: 'alex_v',   // v — крупный план со знаком V
@@ -173,7 +176,7 @@ const SET = {
     { id: 't2', type: 'table', x: 2.9, z: 9.0 }, { id: 'alex', type: 'char', char: 'alex', pose: 'sit', x: 3.55, z: 9.0, zone: 'house', face: [-1, 0] }, /* Alex — сбоку от столика t2 (+x), лицом к столу (face): в сцене 01 справа от стола, в 02 слева */ { id: 'raithwyn', type: 'char', char: 'raithwyn', pose: 'stand', x: 2.2, z: 9.05, zone: 'house' }, /* Raithwyn стоит у столика t2 (−x, напротив Alex), вместо тени g2 */
     { id: 't3', type: 'table', x: -1.2, z: 7.0, r: .4 }, { id: 'chillet', type: 'char', char: 'chillet', pose: 'sleep', x: -1.05, z: 7.6, zone: 'house' }, /* Chillet спит на полу перед столиком t3 (со стороны сцены), вместо тени g3 */
     { id: 't4', type: 'table', x: 4.6, z: 5.6 }, { id: 'couple', type: 'char', char: 'couple', pose: 'stand', x: 4.55, z: 6.15, zone: 'house' }, /* пара стоит у столика t4 со стороны сцены, вместо тени g4 */
-    { id: 't5', type: 'table', x: -4.4, z: 4.8 }, { id: 'g5', type: 'ghost', x: -4.6, z: 5.25, color: '#30343e', ears: 1.2 },
+    { id: 't5', type: 'table', x: -4.4, z: 4.8 }, { id: 'freija', type: 'char', char: 'freija', pose: 'stand', x: -4.55, z: 5.3, zone: 'house' }, /* FreijaFoxy стоит у столика t5 со стороны сцены, вместо тени g5 */
     { id: 't6', type: 'table', x: 1.6, z: 3.2, r: .4 },
   ],
 };
