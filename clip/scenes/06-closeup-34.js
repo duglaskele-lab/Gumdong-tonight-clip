@@ -9,7 +9,7 @@ const CAM6 = { x: G.x + R * Math.sin(r), y: G.y - .2, z: G.z - R * Math.cos(r), 
 scene({
   id: '06 closeup 3/4', start: b(80), end: b(93), lyrics: 'caption', world: true, worldBlur: 6, sharp: ['gumdong'],
   cam: { keys: [Object.assign({ t: 0 }, CAM6), Object.assign({ t: b(93) - b(80) }, CAM6)] },   // статичная камера
-  set: { hide: ['mic'], ents: { gumdong: { pose: 'q34Bust', mouth: true } },
+  set: { hide: ['mic'], ents: { gumdong: { pose: 'q34Bust', mouth: true, anim: [['breath', 3], ['sway', .35]] } },   // не статична: дыхание (сжатие-растяжение) и лёгкое покачивание
     light: { house: .2, stage: .9, beams: 1, rim: .8 } },
   overlay: [{ type: 'note', text: '06 · 3/4, липсинк: 4 нарисованных рта; фон — размытая сцена' }],
 });
