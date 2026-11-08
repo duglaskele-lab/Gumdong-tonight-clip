@@ -140,13 +140,13 @@ const CHARACTERS = {
 // Текст песни для подписей. t/end — секунды. Уточняется инструментом Sync lyrics (клавиша L) в плеере.
 const LYRICS = [
   { t: 13.84, end: 15.40, text: "i'm really scared" },
-  { t: 15.60, end: 22.50, text: '"mom, can i sleep with you tonight?"' },
+  { t: 15.60, end: 22.50, text: 'mom, can i sleep with you tonight?' },
   { t: 24.16, end: 29.20, text: "it's not a nightmare, i'm dreaming, it's a nightmare i live in" },
   { t: 29.98, end: 32.60, text: "i'm really scared" },
-  { t: 33.66, end: 38.90, text: '"mom, can i sleep with you tonight?"' },
+  { t: 33.66, end: 38.90, text: 'mom, can i sleep with you tonight?' },
   { t: 39.10, end: 46.60, text: 'again, again, again, again, again…' },
-  { t: 48.20, end: 52.00, text: '"can i sleep with you tonight?"' },   // голос вступает в 48.2 (до этого тишина)
-  { t: 60.60, end: 65.80, text: '"can i sleep with you tonight?"' },
+  { t: 48.20, end: 52.00, text: 'can i sleep with you tonight?' },   // голос вступает в 48.2 (до этого тишина)
+  { t: 60.60, end: 65.80, text: 'can i sleep with you tonight?' },
 ];
 
 // Декорации клуба (мир в метрах). Сцена может спрятать (set.hide), переопределить (set.ents) или добавить (set.add) объекты.

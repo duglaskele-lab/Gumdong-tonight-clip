@@ -2,17 +2,19 @@
 { // блок: константы сцены не видны другим файлам
 const AG0 = 39.15 - b(93), AGD = .72;   // первое «again» от начала сцены и шаг
 const agT = i => AG0 + i * AGD;
+// Gumdong не статична: лёгкое дыхание (сжатие-растяжение по высоте) и покачивание
+const LIVE = [['breath', 3], ['sway', .35]];
 const shots = [
-  { char: 'gumdong', pose: 'calm', h: 1300, x: W * .43, y: H + 300, mouth: true },   // как в сцене 03, чуть левее
+  { char: 'gumdong', pose: 'calm', h: 1300, x: W * .43, y: H + 300, mouth: true, anim: LIVE },   // как в сцене 03, чуть левее
   { char: 'rossali', pose: 'wide', h: 1080, x: W * .5, y: H + 70 },          // Rossali 1: с басом целиком (сигарета)
   { char: 'lupa', pose: 'portrait', h: 1000, x: W * .62, y: H + 60 },
   { char: 'maeve', pose: 'chin', h: 1120, x: W * .4, y: H + 60 },           // Maeve: подбородок на руках, застывшая улыбка
   { char: 'alex', pose: 'v', h: 1000, x: W * .64, y: H + 60 },   // крупный план со знаком V
-  { char: 'gumdong', pose: 'scared', h: 1040, x: W * .5, mouth: true },   // поёт «again» — в середине сцены
+  { char: 'gumdong', pose: 'scared', h: 1040, x: W * .5, mouth: true, anim: LIVE },   // поёт «again» — в середине сцены
   { char: 'rossali', pose: 'laugh', h: 1100, x: W * .56, y: H + 40 },        // Rossali 2: смеётся и показывает на зрителя
   { char: 'lupa', pose: 'stick', h: 1090, x: W - 1090 * 1477 / 861 / 2 + 20, y: H + 15 },   // Lupa 2: палочка в вытянутой руке, правый край за кадром
   { char: 'rossali', pose: 'think', h: 1150, x: W * .42, y: H + 120 },       // Rossali 3 (вместо второй Maeve): задумалась
-  { char: 'gumdong', pose: 'eyes', anchor: 'center', h: W * 505 / 1280, x: W / 2, y: H / 2, bg: '#000' },   // финал сцены: глаза крупно, чёрные поля
+  { char: 'gumdong', pose: 'eyes', anchor: 'center', h: W * 505 / 1280, x: W / 2, y: H / 2, bg: '#000', anim: [['breath', 2]] },   // финал сцены: глаза крупно, чёрные поля
 ];
 const BGS = ['#8a0014', '#1d1a22'];
 scene({
@@ -21,7 +23,7 @@ scene({
   layers: [
     { type: 'cuts', items: [{ t: 0, bg: '#000' }].concat(shots.map((s, i) => ({ t: agT(i), bg: s.bg || BGS[i % 2] }))) },
     { type: 'stepword', words: shots.map((s, i) => ({ t: agT(i), text: 'AGAIN' })), steps: [1, 1.22, 1.5], stepDur: AGD / 3, fit: .9, jitter: 14, color: '#f6efe4', y: H * .46 },
-    { type: 'cutsFront', push: .12, items: [{ t: 0, char: 'gumdong', pose: 'calm', h: 1300, x: W * .43, y: H + 300, shade: .5 }].concat(shots.map((s, i) => Object.assign({ t: agT(i) }, s))) },
+    { type: 'cutsFront', push: .12, items: [{ t: 0, char: 'gumdong', pose: 'calm', h: 1300, x: W * .43, y: H + 300, shade: .5, anim: LIVE }].concat(shots.map((s, i) => Object.assign({ t: agT(i) }, s))) },
   ],
   overlay: [{ type: 'note', text: '07 · AGAIN: склейка на каждое слово' }],
 });
