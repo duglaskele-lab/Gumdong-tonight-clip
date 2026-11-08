@@ -98,6 +98,9 @@ const CHARACTERS = {
       mouthPatch: { keys: ['gumdong_calm_mp_closed', 'gumdong_calm_mp_half', 'gumdong_calm_mp_wide', 'gumdong_calm_mp_o'], w: 140 / 1095, h: 152 / 1356, at: [545 / 1095, 666 / 1356, 0] } },
     calm: { key: 'gumdong_calm_closed', mouth: { x: .4975, y: .48, w: .06 },
       mouths: ['gumdong_calm_closed', 'gumdong_calm_half', 'gumdong_calm_wide', 'gumdong_calm_o'] },
+    // q34Bust — тот же портрет 3/4 в 3D-клубе: картинка = верхние 44 % роста (уши → грудь), сцена 06
+    q34Bust: { key: 'gumdong_34_half', part: .44, mouth: { x: .364, y: .46, w: .08 },
+      mouths: ['gumdong_34_closed', 'gumdong_34_half', 'gumdong_34_wide', 'gumdong_34_o'] },
     q34: { key: 'gumdong_34_half', mouth: { x: .364, y: .46, w: .08 },
       mouths: ['gumdong_34_closed', 'gumdong_34_half', 'gumdong_34_wide', 'gumdong_34_o'] },
     play: { key: 'gumdong_guitar', anim: 'gumdong_play1' },   // анимация: играет на гитаре (Seedance S1, цикл 5 с)

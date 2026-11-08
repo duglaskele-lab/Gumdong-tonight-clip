@@ -1,11 +1,16 @@
-/* 06 · Крупный план в 3/4, липсинк: «mom, can i sleep with you tonight?» */
+/* 06 · Крупный план в 3/4, липсинк: «mom, can i sleep with you tonight?»
+   Gumdong стоит в 3D-клубе на своём месте (портрет 3/4 по грудь, поза q34Bust), камера неподвижна, близко,
+   сбоку-спереди (со стороны, куда она смотрит); за ней — размытая часть сцены: занавес, Rossali. Gumdong резкая. */
+{ // блок: константы сцены не видны другим файлам
+const G = { x: 0, y: .7 + 1.5, z: 13.3 };   // лицо Gumdong
+const R = .64, A = 22, OF = -9;              // расстояние, угол камеры от фронта (°, + — справа от неё), смещение взгляда (она правее центра)
+const r = A * Math.PI / 180;
+const CAM6 = { x: G.x + R * Math.sin(r), y: G.y - .2, z: G.z - R * Math.cos(r), yaw: -A + OF, pitch: 7, fov: 60 };
 scene({
-  id: '06 closeup 3/4', start: b(80), end: b(93), lyrics: 'caption',
-  layers: [
-    { type: 'bg', style: 'spot', x: W * .62, y: H * .38, color: '#05040c', glow: 'rgba(70,40,200,.8)', glow2: 'rgba(200,30,90,.4)', pulse: .05 },
-    { type: 'sprite', char: 'gumdong', pose: 'q34', x: W * .56, y: H + 300, anchor: 'bottom', mouth: true, anim: ['breath'],
-      rim: { color: '#6a5cff', amount: .35, depth: .3 },
-      keys: [{ t: 0, h: 1280 }, { t: b(93) - b(80), h: 1380, e: 'linear' }] },
-  ],
-  overlay: [{ type: 'note', text: '06 · 3/4, липсинк: 4 нарисованных рта' }],
+  id: '06 closeup 3/4', start: b(80), end: b(93), lyrics: 'caption', world: true, worldBlur: 6, sharp: ['gumdong'],
+  cam: { keys: [Object.assign({ t: 0 }, CAM6), Object.assign({ t: b(93) - b(80) }, CAM6)] },   // статичная камера
+  set: { hide: ['mic'], ents: { gumdong: { pose: 'q34Bust', mouth: true } },
+    light: { house: .2, stage: .9, beams: 1, rim: .8 } },
+  overlay: [{ type: 'note', text: '06 · 3/4, липсинк: 4 нарисованных рта; фон — размытая сцена' }],
 });
+}
