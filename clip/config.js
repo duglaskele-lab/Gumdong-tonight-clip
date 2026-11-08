@@ -135,8 +135,8 @@ const CHARACTERS = {
   chillet: { name: 'Chillet (маленький зверёк, спит перед столиком t3)', height: .45, fallback: 'sleep', poses: { sleep: 'chillet' } },   // только вид спереди: со входа его закрывает стол
   raithwyn: { name: 'Raithwyn (зритель, стоит у столика Alex)', height: 1.6, fallback: 'stand', poses: {
     stand: { key: 'raithwyn_front', back: 'raithwyn_back' } } },
-  freija: { name: 'FreijaFoxy (зритель, танцует у столика Maeve t1, руки на бёдрах; миниатюрная)', height: 1.2, fallback: 'stand', poses: {
-    stand: { key: 'freija_front', back: 'freija_back' },   // рост картинки — до кончика рога (было 1.72, уменьшена на 30 % — она миниатюрная)
+  freija: { name: 'FreijaFoxy (зритель, танцует у столика Maeve t1, руки на бёдрах)', height: 1.6, fallback: 'stand', poses: {
+    stand: { key: 'freija_front', back: 'freija_back' },   // рост картинки — до кончика рога (1.6 м — по просьбе пользователя)
     // танец (Seedance, руки на бёдрах): кадры в рамке спрайта с полями 140/2 px (хвост машет шире) → scale; вид сзади статичный
     dance: { key: 'freija_front_pad', anim: 'freija_dance', scale: 1253 / 1243, back: 'freija_back', backScale: 1243 / 1253 } } },
   couple: { name: 'Пара (зрители, стоят у столика t4): девушка-кролик и конь обнимает её за талию', height: 1.95, fallback: 'stand', poses: {
