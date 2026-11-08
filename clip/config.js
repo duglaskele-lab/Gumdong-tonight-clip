@@ -41,6 +41,8 @@ const ANIM_FILES = {
   gumdong_back1: { dir: 'assets/anim/gumdong_back1', frames: 121, fps: 24, loop: false },
   // gumdong_mic_play — у микрофона играет на гитаре (Seedance), кадры в рамке спрайта gumdong_mic (×0.75); верх уха обрезан Seedance — держать за кадром
   // gumdong_calm_sway — портрет, покачивает головой (Seedance), сцена 03; с начала, потом бесшовная петля кадров 44…91 (одно покачивание, 2 с)
+  // freija_dance — FreijaFoxy танцует, руки на бёдрах (Seedance); конец ≈ начало — обычный цикл; в клубе замедлен вдвое (animSpeed у объекта)
+  freija_dance: { dir: 'assets/anim/freija_dance', frames: 121, fps: 24, loop: true },
   gumdong_calm_sway: { dir: 'assets/anim/gumdong_calm_sway', frames: 121, fps: 24, loop: [44, 92] },
   gumdong_mic_play: { dir: 'assets/anim/gumdong_mic_play', frames: 121, fps: 24, loop: 'pingpong' },   // рот Seedance стёрт в кадрах (рот — кодом по ANIM_TRACK)
   lupa_play1: { dir: 'assets/anim/lupa_play1', frames: 121, fps: 24, loop: true },
@@ -72,7 +74,7 @@ const ASSETS = {
   alex_v: 'assets/sprites/alex_v.png', alex_side: 'assets/sprites/alex_side.png',
   lupa_stick: 'assets/sprites/lupa_stick.png', maeve_chin: 'assets/sprites/maeve_chin.png',
   raithwyn_front: 'assets/sprites/raithwyn_front.png', raithwyn_back: 'assets/sprites/raithwyn_back.png',
-  freija_front: 'assets/sprites/freija_front.png', freija_back: 'assets/sprites/freija_back.png',   // FreijaFoxy (src-sheets/freija_*_src.png)
+  freija_front: 'assets/sprites/freija_front.png', freija_front_pad: 'assets/sprites/freija_front_pad.png', freija_back: 'assets/sprites/freija_back.png',   // FreijaFoxy (src-sheets/freija_*_src.png)
   couple_front: 'assets/sprites/couple_front.png', couple_back: 'assets/sprites/couple_back.png',   // пара: кролик и конь (src-sheets/couple_*_src.png; вид сзади отзеркален — конь слева, как и должно быть со спины)
   chillet: 'assets/sprites/chillet.png',
   maeve_sit: 'assets/sprites/maeve_sit.png', maeve_sit_back: 'assets/sprites/maeve_sit_back.png', chair: 'assets/sprites/chair.png',   // стул-образец — для всех зрителей один
@@ -134,7 +136,9 @@ const CHARACTERS = {
   raithwyn: { name: 'Raithwyn (зритель, стоит у столика Alex)', height: 1.6, fallback: 'stand', poses: {
     stand: { key: 'raithwyn_front', back: 'raithwyn_back' } } },
   freija: { name: 'FreijaFoxy (зритель, стоит у столика Maeve t1, руки на бёдрах)', height: 1.72, fallback: 'stand', poses: {
-    stand: { key: 'freija_front', back: 'freija_back' } } },   // рост картинки — до кончика рога
+    stand: { key: 'freija_front', back: 'freija_back' },   // рост картинки — до кончика рога
+    // танец (Seedance, руки на бёдрах): кадры в рамке спрайта с полями 140/2 px (хвост машет шире) → scale; вид сзади статичный
+    dance: { key: 'freija_front_pad', anim: 'freija_dance', scale: 1253 / 1243, back: 'freija_back', backScale: 1243 / 1253 } } },
   couple: { name: 'Пара (зрители, стоят у столика t4): девушка-кролик и конь обнимает её за талию', height: 1.95, fallback: 'stand', poses: {
     stand: { key: 'couple_front', back: 'couple_back' } } },   // рост картинки = конь до кончиков ушей   // стоит лицом к сцене; вид сзади — когда камера за спиной
   alex: { name: 'Alex (зритель за столиком)', height: 1.75, fallback: 'front', poses: { front: 'alex_front', v: 'alex_v',   // v — крупный план со знаком V
@@ -172,7 +176,7 @@ const SET = {
     { id: 'mic', type: 'mic', x: -.2, boom: .12, z: 12.95, h: 1.27 },   // стойка слева от неё (как в спрайтах у микрофона), штанга к губам; в сценах 08, 11 спрятана — стойка в спрайте
     { id: 'gumdong', type: 'char', char: 'gumdong', pose: 'play', x: 0, y: .7, z: 13.3, zone: 'stage', mouth: true },   // поза play — анимация, своё движение не нужно
     // зал: столики и зрители (тени — заглушки до листов зрителей)
-    { id: 't1', type: 'table', x: -3.6, z: 9.4 }, { id: 'maeve', type: 'char', char: 'maeve', pose: 'sit', x: -3.6, z: 8.85, zone: 'house', eyeY: .92 }, { id: 'freija', type: 'char', char: 'freija', pose: 'stand', x: -4.25, z: 8.7, zone: 'house' }, /* FreijaFoxy стоит у столика Maeve (t1), рядом с ней, со стороны входа */
+    { id: 't1', type: 'table', x: -3.6, z: 9.4 }, { id: 'maeve', type: 'char', char: 'maeve', pose: 'sit', x: -3.6, z: 8.85, zone: 'house', eyeY: .92 }, { id: 'freija', type: 'char', char: 'freija', pose: 'dance', animSpeed: .5, x: -4.25, z: 8.7, zone: 'house' }, /* FreijaFoxy стоит у столика Maeve (t1), рядом с ней, со стороны входа */
     { id: 't2', type: 'table', x: 2.9, z: 9.0 }, { id: 'alex', type: 'char', char: 'alex', pose: 'sit', x: 3.55, z: 9.0, zone: 'house', face: [-1, 0] }, /* Alex — сбоку от столика t2 (+x), лицом к столу (face): в сцене 01 справа от стола, в 02 слева */ { id: 'raithwyn', type: 'char', char: 'raithwyn', pose: 'stand', x: 2.2, z: 9.05, zone: 'house' }, /* Raithwyn стоит у столика t2 (−x, напротив Alex), вместо тени g2 */
     { id: 't3', type: 'table', x: -1.2, z: 7.0, r: .4 }, { id: 'chillet', type: 'char', char: 'chillet', pose: 'sleep', x: -1.05, z: 7.6, zone: 'house' }, /* Chillet спит на полу перед столиком t3 (со стороны сцены), вместо тени g3 */
     { id: 't4', type: 'table', x: 4.6, z: 5.6 }, { id: 'couple', type: 'char', char: 'couple', pose: 'stand', x: 4.55, z: 6.15, zone: 'house' }, /* пара стоит у столика t4 со стороны сцены, вместо тени g4 */
