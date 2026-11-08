@@ -29,7 +29,7 @@ def rembg_mask(im):
     return np.asarray(remove(im, session=_SESSION, post_process_mask=True))[:, :, 3]
 
 
-def whitecut(im, thr=14, no_bottom=False, wm=None, hint=None, band=3, holes=0, hole_thr=30):
+def whitecut(im, thr=14, no_bottom=False, wm=None, hint=None, band=3, holes=0, hole_thr=30, holes_below=0):
     a = np.asarray(im.convert('RGB')).astype(float)
     if wm:
         x0, y0, x1, y1 = wm; a[y0:y1, x0:x1] = 255
@@ -47,7 +47,8 @@ def whitecut(im, thr=14, no_bottom=False, wm=None, hint=None, band=3, holes=0, h
         ids = [i for i in range(1, nh + 1) if i not in eh]
         if ids:
             ar = nd.sum(np.ones_like(d), lab_h, ids)
-            big = [i for i, v in zip(ids, ar) if v >= holes]
+            cy = nd.center_of_mass(np.ones_like(d), lab_h, ids)
+            big = [i for i, v, c in zip(ids, ar, cy) if v >= holes and c[0] >= holes_below]   # holes_below: выше этой строки (лицо, белки глаз) не трогать
             bg |= np.isin(lab_h, big)
             # и мягкая полоса вокруг них тоже уйдёт через band ниже
     # замкнутые просветы: спросить rembg
